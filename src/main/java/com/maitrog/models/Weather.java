@@ -1,6 +1,6 @@
-package Models;
+package com.maitrog.models;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Weather {
     private final int id;
@@ -10,17 +10,19 @@ public class Weather {
     private final int maxTemperature;
     private final int pressure;
     private final int humidity;
+    private final Site site;
     private final int cityId;
 
-    public Weather(int _id, Date _checkedDate, Date _targetDate, int _minTemperature, int _maxTemperature, int _pressure, int _humidity, int _cityId) {
-        id = _id;
-        checkedDate = _checkedDate;
-        targetDate = _targetDate;
-        minTemperature = _minTemperature;
-        maxTemperature = _maxTemperature;
-        pressure = _pressure;
-        humidity = _humidity;
-        cityId = _cityId;
+    public Weather(int id, Date checkedDate, Date targetDate, int minTemperature, int maxTemperature, int pressure, int humidity, Site site, int cityId) {
+        this.id = id;
+        this.checkedDate = checkedDate;
+        this.targetDate = targetDate;
+        this.minTemperature = minTemperature;
+        this.maxTemperature = maxTemperature;
+        this.pressure = pressure;
+        this.humidity = humidity;
+        this.site = site;
+        this.cityId = cityId;
     }
 
     public int getId() {
