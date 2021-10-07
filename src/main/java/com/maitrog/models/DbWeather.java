@@ -1,4 +1,4 @@
-package Models;
+package com.maitrog.models;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -56,20 +56,9 @@ public class DbWeather {
             ResultSet citiesResult = statement.executeQuery("SELECT * FROM Cities");
             while (citiesResult.next()) {
                 int cityId = citiesResult.getInt("Id");
-                ResultSet weatherResult = statement.executeQuery(String.format("SELECT * FROM Weather WHERE CityId=%d", cityId));
-                List<Weather> weathers = new ArrayList<>();
-                while (weatherResult.next()) {
-                    weathers.add(new WeatherBuilder()
-                            .id(weatherResult.getInt("Id"))
-                            .checkedDate(weatherResult.getDate("CheckedDate"))
-                            .targetDate(weatherResult.getDate("TargetDate"))
-                            .minTemperature(weatherResult.getInt("MinTemperature"))
-                            .maxTemperature(weatherResult.getInt("MaxTemperature"))
-                            .pressure(weatherResult.getInt("Pressure"))
-                            .humidity(weatherResult.getInt("Humidity"))
-                            .cityId(weatherResult.getInt("CityId"))
-                            .buildWeather());
-                }
+                List<Weather> yandexWeathers = getAllWeathers("YandexWeather", cityId);
+                List<Weather> ramblerWeathers = getAllWeathers("RamblerWeather", cityId);
+                List<Weather> worldWeathers = getAllWeathers("WorldWeather", cityId);
                 cities.add(new CityBuilder().id(cityId)
                         .nameRu(citiesResult.getString("NameRu"))
                         .nameEn(citiesResult.getString("NameEn"))
@@ -77,7 +66,9 @@ public class DbWeather {
                         .urlRambler(citiesResult.getString("UrlRambler"))
                         .urlWorldWeather(citiesResult.getString("UrlWorldWeather"))
                         .country(citiesResult.getString("Country"))
-                        .weathers(weathers)
+                        .yandexWeathers(yandexWeathers)
+                        .ramblerWeather(ramblerWeathers)
+                        .worldWeather(worldWeathers)
                         .buildCity());
             }
             return cities;
@@ -87,10 +78,10 @@ public class DbWeather {
         }
     }
 
-    public List<Weather> getAllWeathers() {
+    public List<Weather> getAllWeathers(String tableName) {
         try (Statement statement = connection.createStatement()) {
             List<Weather> weathers = new ArrayList<>();
-            ResultSet weatherResult = statement.executeQuery("SELECT * FROM Weather");
+            ResultSet weatherResult = statement.executeQuery(String.format("SELECT * FROM %s", tableName));
             while (weatherResult.next()) {
                 weathers.add(new WeatherBuilder()
                         .id(weatherResult.getInt("Id"))
@@ -110,33 +101,56 @@ public class DbWeather {
         }
     }
 
-    public void addCity(City _city) {
+    public List<Weather> getAllWeathers(String tableName, int cityId) {
+        try (Statement statement = connection.createStatement()) {
+            List<Weather> weathers = new ArrayList<>();
+            ResultSet weatherResult = statement.executeQuery(String.format("SELECT * FROM %s WHERE CityId = %d", tableName, cityId));
+            while (weatherResult.next()) {
+                weathers.add(new WeatherBuilder()
+                        .id(weatherResult.getInt("Id"))
+                        .checkedDate(weatherResult.getDate("CheckedDate"))
+                        .targetDate(weatherResult.getDate("TargetDate"))
+                        .minTemperature(weatherResult.getInt("MinTemperature"))
+                        .maxTemperature(weatherResult.getInt("MaxTemperature"))
+                        .pressure(weatherResult.getInt("Pressure"))
+                        .humidity(weatherResult.getInt("Humidity"))
+                        .cityId(weatherResult.getInt("CityId"))
+                        .buildWeather());
+            }
+            return weathers;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+    public void addCity(City city) {
         try (PreparedStatement statement = connection.prepareStatement(
                 "INSERT INTO Cities(NameRu, NameEn, UrlYandex, UrlRambler, UrlWorldWeather, Country) " +
                         "VALUES (?, ?, ?, ?, ?, ?)")) {
-            statement.setObject(1, _city.getNameRu());
-            statement.setObject(2, _city.getNameEn());
-            statement.setObject(3, _city.getUrlYandex());
-            statement.setObject(4, _city.getUrlRambler());
-            statement.setObject(5, _city.getUrlWorldWeather());
-            statement.setObject(6, _city.getCountry());
+            statement.setObject(1, city.getNameRu());
+            statement.setObject(2, city.getNameEn());
+            statement.setObject(3, city.getUrlYandex());
+            statement.setObject(4, city.getUrlRambler());
+            statement.setObject(5, city.getUrlWorldWeather());
+            statement.setObject(6, city.getCountry());
             statement.execute();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
 
-    public void addWeather(Weather _weather) {
+    public void addWeather(Weather weather) {
         try (PreparedStatement statement = connection.prepareStatement(
-                "INSERT INTO Weather(Site, CheckedDate, TargetDate, MinTemperature, MaxTemperature, Pressure, Humidity, CityId)" +
-                        "VALUE(?, ?, ?, ?, ?, ?, ?)")) {
-            statement.setObject(1, _weather.getCheckedDate());
-            statement.setObject(2, _weather.getTargetDate());
-            statement.setObject(3, _weather.getMinTemperature());
-            statement.setObject(4, _weather.getMaxTemperature());
-            statement.setObject(5, _weather.getPressure());
-            statement.setObject(6, _weather.getHumidity());
-            statement.setObject(7, _weather.getCityId());
+                "INSERT INTO Weather(Site, CheckedDate, TargetDate, MinTemperature, MaxTemperature, Pressure, Humidity, CityId) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?)")) {
+            statement.setObject(1, weather.getCheckedDate());
+            statement.setObject(2, weather.getTargetDate());
+            statement.setObject(3, weather.getMinTemperature());
+            statement.setObject(4, weather.getMaxTemperature());
+            statement.setObject(5, weather.getPressure());
+            statement.setObject(6, weather.getHumidity());
+            statement.setObject(7, weather.getCityId());
             statement.execute();
         } catch (SQLException throwables) {
             throwables.printStackTrace();

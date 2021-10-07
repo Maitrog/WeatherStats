@@ -1,4 +1,4 @@
-package Models;
+package com.maitrog.models;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
+import java.sql.Date;
 
 public class Parser {
 
@@ -125,14 +126,14 @@ public class Parser {
         return Weathers;
     }
 
-    public static ArrayList<Weather> parseWorldWeather(String url) throws IOException{
+    public static ArrayList<Weather> parseWorldWeather(String url) throws IOException {
         ArrayList<Weather> Weathers = new ArrayList<>();
 
         String response = getRequest(url);
 
         String[] tmp = response.split("<li class='ww-month-week");
 
-        for(int i = 1; i < tmp.length; i++){
+        for (int i = 1; i < tmp.length; i++) {
             int day = Integer.parseInt(tmp[i].split("<div>")[1].split("</div>")[0]);
             Date targetDate = createDate(day);
             int maxTemp = Integer.parseInt(tmp[i].split("<span>")[1].split("°</span>")[0]);
@@ -179,22 +180,27 @@ public class Parser {
             case "сентября" -> Calendar.SEPTEMBER;
             case "октября" -> Calendar.OCTOBER;
             case "ноября" -> Calendar.NOVEMBER;
-            case "дерабря" -> Calendar.DECEMBER;
+            case "декабря" -> Calendar.DECEMBER;
             default -> Calendar.JANUARY;
         };
 
-        return new GregorianCalendar(2021, month, day).getTime();
+        Calendar calendar = Calendar.getInstance();
+        if (month == calendar.get(Calendar.MONTH)) {
+            return new Date(new GregorianCalendar(calendar.get(Calendar.YEAR), month, day).getTimeInMillis());
+        } else {
+            return new Date(new GregorianCalendar(calendar.get(Calendar.YEAR) + 1, month, day).getTimeInMillis());
+        }
     }
 
     private static Date createDate(int day) {
         Date date;
         Calendar calendar = Calendar.getInstance();
         if (day >= calendar.get(Calendar.DAY_OF_MONTH)) {
-            date = new GregorianCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), day).getTime();
+            date = new Date(new GregorianCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), day).getTimeInMillis());
         } else if (calendar.get(Calendar.MONTH) == Calendar.DECEMBER) {
-            date = new GregorianCalendar(calendar.get(Calendar.YEAR) + 1, Calendar.JANUARY, day).getTime();
+            date = new Date(new GregorianCalendar(calendar.get(Calendar.YEAR) + 1, Calendar.JANUARY, day).getTimeInMillis());
         } else {
-            date = new GregorianCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, day).getTime();
+            date = new Date(new GregorianCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, day).getTimeInMillis());
         }
         return date;
     }

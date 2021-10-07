@@ -1,4 +1,4 @@
-package Models;
+package com.maitrog.models;
 
 public class ConfigDb {
     public String server;

@@ -1,4 +1,4 @@
-package Controllers;
+package com.maitrog.controllers;
 
 import javafx.fxml.FXML;
 
