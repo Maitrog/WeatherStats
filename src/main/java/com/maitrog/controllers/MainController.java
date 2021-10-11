@@ -2,21 +2,20 @@ package com.maitrog.controllers;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXHamburger;
-import javafx.animation.ParallelTransition;
-import javafx.animation.ScaleTransition;
-import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 
 import javafx.fxml.Initializable;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.VBox;
-import javafx.util.Duration;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.TextAlignment;
 
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
 
 
 public class MainController implements Initializable {
@@ -27,7 +26,10 @@ public class MainController implements Initializable {
     private JFXHamburger hamburger;
 
     @FXML
-    private VBox vBox;
+    private GridPane gridPane;
+
+    @FXML
+    private JFXButton updateButton;
 
     protected void openT() {
         if (task != null) {
@@ -38,16 +40,23 @@ public class MainController implements Initializable {
 
             @Override
             public void run() {
-                if (i < 14 && vBox.getWidth() < 250) {
-                    vBox.setPrefWidth(vBox.getWidth() + 15);
+                if (i < 14 && gridPane.getWidth() < 250) {
+                    gridPane.setPrefWidth(gridPane.getWidth() + 15);
                 } else {
                     this.cancel();
                 }
                 i++;
             }
         };
-        animTimer = new Timer();
-        animTimer.schedule(task, 0, 16);
+
+        updateButton.setText("Обновить данные");
+        updateButton.setTextAlignment(TextAlignment.LEFT);
+        Thread open = new Thread(() -> {
+            animTimer = new Timer();
+            animTimer.schedule(task, 0, 16);
+        });
+        open.setDaemon(true);
+        open.start();
     }
 
     protected void closeT() {
@@ -58,16 +67,21 @@ public class MainController implements Initializable {
             int i = 0;
             @Override
             public void run() {
-                if (i < 14 && vBox.getWidth() > 50) {
-                    vBox.setPrefWidth(vBox.getWidth() - 15);
+                if (i < 14 && gridPane.getWidth() > 50) {
+                    gridPane.setPrefWidth(gridPane.getWidth() - 15);
                 } else {
                     this.cancel();
                 }
                 i++;
             }
         };
-        animTimer = new Timer();
-        animTimer.schedule(task, 0, 16);
+
+        Thread close = new Thread(() -> {
+            animTimer = new Timer();
+            animTimer.schedule(task, 0, 16);
+        });
+        close.setDaemon(true);
+        close.start();
     }
 
     @Override
@@ -85,5 +99,10 @@ public class MainController implements Initializable {
                 closeT();
             }
         });
+
+        Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/refresh.png")));
+        ImageView imageView = new ImageView(image);
+
+        updateButton.setGraphic(new ImageView(image));
     }
 }
