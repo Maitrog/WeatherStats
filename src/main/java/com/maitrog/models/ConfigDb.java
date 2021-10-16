@@ -15,10 +15,9 @@ public class ConfigDb {
         return String.format("jdbc:sqlserver://%s;"
                 + "database=%s;"
                 + "user=%s;"
-                + "password=%s"
                 + "integratedSecurity=%b;"
                 + "encrypt=%b;"
                 + "trustServerCertificate=%b;"
-                + "loginTimeout=%d;", server, database, user, password, integratedSecurity, encrypt, trustServerCertificate, loginTimeout);
+                + "loginTimeout=%d;", server, database, user, integratedSecurity, encrypt, trustServerCertificate, loginTimeout);
     }
 }
