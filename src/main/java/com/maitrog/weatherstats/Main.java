@@ -27,6 +27,7 @@ public class Main extends Application{
         Scene auth_window = new Scene(auth_root, 300, 400);
 
         Stage auth_stage = new Stage();
+        auth_stage.setResizable(false);
         auth_stage.initModality(Modality.APPLICATION_MODAL);
         auth_stage.initOwner(stage);
         auth_stage.setScene(auth_window);
@@ -40,9 +41,8 @@ public class Main extends Application{
 
         stage.setScene(scene);
 
-
+        stage.setMinWidth(500);
         stage.setMinHeight(350);
-        stage.setMinWidth(400);
 
         stage.show();
         auth_stage.show();
