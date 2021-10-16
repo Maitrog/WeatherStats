@@ -42,8 +42,8 @@ public class Parser {
             Date date = createDate(dateStr);
 
             tmp = tmp[1].split("<span class=\"temp__value temp__value_with-unit\">");
-            int maxTemp = Integer.parseInt(tmp[1].split("</span>")[0]);
-            int minTemp = Integer.parseInt(tmp[2].split("</span>")[0]);
+            int maxTemp = Integer.parseInt(tmp[1].split("</span>")[0].replace("в€’", "-"));
+            int minTemp = Integer.parseInt(tmp[2].split("</span>")[0].replace("в€’", "-"));
 
             tmp = tmp[3].split("</td>");
             var pressure_tmp = tmp[1].split(">");
@@ -57,6 +57,7 @@ public class Parser {
                     .maxTemperature(maxTemp)
                     .pressure(pressure)
                     .humidity(humidity)
+                    .siteType(SiteType.Yandex)
                     .buildWeather());
         }
 
@@ -68,9 +69,9 @@ public class Parser {
 
         String response = getRequest(url);
 
-        String[] tmp = response.split("div id=\"app\"");
-        tmp = tmp[1].split("</h2>");
-        tmp = tmp[1].split("data-weather");
+        String[] tmp = response.split("</div><div><div");
+        tmp = tmp[1].split("</div></div></div></div></div></div><div");
+        tmp = tmp[0].split("data-weather");
 
         for (int i = 1; i < tmp.length - 1; i++) {
             if (!tmp[i].contains("link_past")) {
@@ -82,21 +83,22 @@ public class Parser {
 
                     String[] data_tmp = date_tmp[2].split("<!-- -->");
                     var maxTemp_tmp = data_tmp[0].split(">");
-                    int maxTemp = Integer.parseInt(maxTemp_tmp[maxTemp_tmp.length - 1]);
+                    int maxTemp = Integer.parseInt(maxTemp_tmp[maxTemp_tmp.length - 1].replace("в€’", "-"));
                     var minTemp_tmp = data_tmp[1].split(">");
-                    int minTemp = Integer.parseInt(minTemp_tmp[minTemp_tmp.length - 1]);
+                    int minTemp = Integer.parseInt(minTemp_tmp[minTemp_tmp.length - 1].replace("в€’", "-"));
 
                     Weathers.add(new WeatherBuilder()
                             .targetDate(targetDate)
                             .minTemperature(minTemp)
                             .maxTemperature(maxTemp)
+                            .siteType(SiteType.Rambler)
                             .buildWeather());
                 } else {
                     int day;
                     String[] day_tmp;
                     if (date_tmp[0].contains("<!-- -->")) {
                         day_tmp = date_tmp[0].split("<!-- -->");
-                        if (Objects.equals(day_tmp[1], " ")) {
+                        if (Objects.equals(day_tmp[1], "В ")) {
                             day_tmp = day_tmp[0].split(">");
                         } else {
                             day_tmp = day_tmp[1].split(">");
@@ -106,19 +108,19 @@ public class Parser {
                     }
 
                     day = Integer.parseInt(day_tmp[day_tmp.length - 1]);
-                    System.out.println(day);
                     Date targetDate = createDate(day);
 
                     var data_tmp = date_tmp[1].split("<!-- -->");
                     var maxTemp_tmp = data_tmp[0].split(">");
-                    int maxTemp = Integer.parseInt(maxTemp_tmp[maxTemp_tmp.length - 1]);
+                    int maxTemp = Integer.parseInt(maxTemp_tmp[maxTemp_tmp.length - 1].replace("в€’", "-"));
                     var minTemp_tmp = data_tmp[1].split(">");
-                    int minTemp = Integer.parseInt(minTemp_tmp[minTemp_tmp.length - 1]);
+                    int minTemp = Integer.parseInt(minTemp_tmp[minTemp_tmp.length - 1].replace("в€’", "-"));
 
                     Weathers.add(new WeatherBuilder()
                             .targetDate(targetDate)
                             .minTemperature(minTemp)
                             .maxTemperature(maxTemp)
+                            .siteType(SiteType.Rambler)
                             .buildWeather());
                 }
             }
@@ -136,13 +138,14 @@ public class Parser {
         for (int i = 1; i < tmp.length; i++) {
             int day = Integer.parseInt(tmp[i].split("<div>")[1].split("</div>")[0]);
             Date targetDate = createDate(day);
-            int maxTemp = Integer.parseInt(tmp[i].split("<span>")[1].split("°</span>")[0]);
-            int minTemp = Integer.parseInt(tmp[i].split("<p>")[1].split("°</p>")[0]);
+            int maxTemp = Integer.parseInt(tmp[i].split("<span>")[1].split("В°</span>")[0].replace("в€’", "-"));
+            int minTemp = Integer.parseInt(tmp[i].split("<p>")[1].split("В°</p>")[0].replace("в€’", "-"));
 
             Weathers.add(new WeatherBuilder()
                     .targetDate(targetDate)
                     .minTemperature(minTemp)
                     .maxTemperature(maxTemp)
+                    .siteType(SiteType.WorldWeather)
                     .buildWeather());
         }
         return Weathers;
@@ -151,6 +154,7 @@ public class Parser {
     private static String getRequest(String url) throws IOException {
         URL obj = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
+        connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/26.0");
 
         connection.setRequestMethod("GET");
 
