@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maitrog.controllers.AuthController">
+   <children>
+      <JFXTextArea fx:id="login" layoutX="70.0" layoutY="50.0" prefHeight="0.0" prefRowCount="1" prefWidth="160.0" />
+      <JFXTextArea fx:id="password" layoutX="70.0" layoutY="110.0" prefHeight="0.0" prefRowCount="1" prefWidth="160.0" />
+      <JFXButton fx:id="authorize" layoutX="120.0" layoutY="230.0" text="Войти" />
+      <JFXButton fx:id="register" layoutX="85.0" layoutY="275.0" text="Зарегистрироваться" />
+   </children>
+</AnchorPane>
