@@ -2,6 +2,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXHamburger?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.chart.AreaChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
@@ -42,11 +43,12 @@
 
                </graphic>
             </JFXButton>
-            <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" text="2" GridPane.rowIndex="2" />
-            <JFXButton fx:id="updateButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" GridPane.rowIndex="3" />
-            <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" text="4" GridPane.rowIndex="5" />
+            <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" text="2" GridPane.rowIndex="1" />
+            <JFXButton fx:id="updateButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" onAction="#updateDatabase" GridPane.rowIndex="2" />
+            <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" text="4" GridPane.rowIndex="4" />
          </children>
       </GridPane>
+      <ProgressBar fx:id="progressBar" layoutX="56.0" layoutY="368.0" prefHeight="18.0" prefWidth="530.0" progress="0.0" />
       <JFXHamburger fx:id="hamburger" layoutX="10.0" layoutY="10.0" />
    </children>
 </AnchorPane>

@@ -10,11 +10,11 @@ public class WeatherBuilder {
     private int maxTemperature;
     private int pressure = -1;
     private int humidity = -1;
-    private Site site;
+    private SiteType siteType;
     private int cityId;
 
     public Weather buildWeather() {
-        return new Weather(id, checkedDate, targetDate, minTemperature, maxTemperature, pressure, humidity, site, cityId);
+        return new Weather(id, checkedDate, targetDate, minTemperature, maxTemperature, pressure, humidity, siteType, cityId);
     }
 
     public WeatherBuilder id(int id) {
@@ -52,13 +52,18 @@ public class WeatherBuilder {
         return this;
     }
 
-    public WeatherBuilder site(Site site) {
-        this.site = site;
+    public WeatherBuilder siteType(int siteType) {
+        this.siteType = SiteType.values()[siteType];
         return this;
     }
 
     public WeatherBuilder cityId(int cityId) {
         this.cityId = cityId;
+        return this;
+    }
+
+    public WeatherBuilder siteType(SiteType siteType) {
+        this.siteType = siteType;
         return this;
     }
 }

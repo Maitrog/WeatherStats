@@ -2,20 +2,25 @@ package com.maitrog.controllers;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXHamburger;
+import com.maitrog.models.City;
+import com.maitrog.models.DbWeather;
+import com.maitrog.models.Parser;
+import com.maitrog.models.Weather;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 import javafx.fxml.Initializable;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.TextAlignment;
 
+import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.sql.SQLException;
+import java.util.*;
 
 
 public class MainController implements Initializable {
@@ -30,6 +35,9 @@ public class MainController implements Initializable {
 
     @FXML
     private JFXButton updateButton;
+
+    @FXML
+    private ProgressBar progressBar;
 
     protected void openT() {
         if (task != null) {
@@ -65,6 +73,7 @@ public class MainController implements Initializable {
         }
         task = new TimerTask() {
             int i = 0;
+
             @Override
             public void run() {
                 if (i < 14 && gridPane.getWidth() > 50) {
@@ -88,7 +97,7 @@ public class MainController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         hamburger.addEventHandler(MouseEvent.MOUSE_PRESSED, (e) ->
         {
-            if(animTimer!=null){
+            if (animTimer != null) {
                 animTimer.cancel();
             }
             if (!isOpen) {
@@ -101,8 +110,33 @@ public class MainController implements Initializable {
         });
 
         Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/refresh.png")));
-        ImageView imageView = new ImageView(image);
 
         updateButton.setGraphic(new ImageView(image));
+    }
+
+    public void updateDatabase(ActionEvent event) {
+        Thread update = new Thread(() -> {
+            try {
+                progressBar.setProgress(0);
+                List<City> cities = DbWeather.getInstance().getAllCities();
+                for (City city :
+                        cities) {
+                    List<Weather> weathers = Parser.parseYandexWeather(city.getUrlYandex());
+                    weathers.addAll(Parser.parseRambler(city.getUrlRambler()));
+                    weathers.addAll(Parser.parseWorldWeather(city.getUrlWorldWeather()));
+
+                    for (Weather weather : weathers) {
+                        weather.setCityId(city.getId());
+                        DbWeather.getInstance().addWeather(weather);
+                    }
+
+                    progressBar.setProgress(progressBar.getProgress() + 1.0 / cities.size());
+                }
+            } catch (SQLException | ClassNotFoundException | IOException e) {
+                e.printStackTrace();
+            }
+        });
+        update.setDaemon(true);
+        update.start();
     }
 }
