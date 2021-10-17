@@ -12,13 +12,10 @@ public class CityBuilder {
     private String urlWorldWeather;
     private String country;
 
-    private List<Weather> yandexWeathers;
-    private List<Weather> ramblerWeathers;
-    private List<Weather> worldWeathers;
+    private List<Weather> weathers;
 
     public City buildCity() {
-        return new City(id, nameRu, nameEn, urlYandex, urlRambler, urlWorldWeather, country, yandexWeathers,
-                ramblerWeathers, worldWeathers);
+        return new City(id, nameRu, nameEn, urlYandex, urlRambler, urlWorldWeather, country, weathers);
     }
 
     public CityBuilder id(int id) {
@@ -56,18 +53,8 @@ public class CityBuilder {
         return this;
     }
 
-    public CityBuilder yandexWeathers(List<Weather> weathers) {
-        yandexWeathers = new ArrayList<>(weathers);
-        return this;
-    }
-
-    public CityBuilder ramblerWeather(List<Weather> weathers) {
-        ramblerWeathers = new ArrayList<>(weathers);
-        return this;
-    }
-
-    public CityBuilder worldWeather(List<Weather> weathers) {
-        worldWeathers = new ArrayList<>(weathers);
+    public CityBuilder weathers(List<Weather> weathers) {
+        this.weathers = new ArrayList<>(weathers);
         return this;
     }
 }

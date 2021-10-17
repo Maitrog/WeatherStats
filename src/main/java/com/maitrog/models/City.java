@@ -11,12 +11,10 @@ public class City {
     private final String urlWorldWeather;
     private final String country;
 
-    private final List<Weather> yandexWeathers;
-    private final List<Weather> ramblerWeathers;
-    private final List<Weather> worldWeathers;
+    private final List<Weather> weathers;
 
     public City(int id, String nameRu, String nameEn, String urlYandex, String urlRambler, String urlWorldWeather,
-                String country, List<Weather> yandexWeathers, List<Weather> ramblerWeathers, List<Weather> worldWeathers) {
+                String country, List<Weather> weathers) {
         this.id = id;
         this.nameRu = nameRu;
         this.nameEn = nameEn;
@@ -24,9 +22,7 @@ public class City {
         this.urlRambler = urlRambler;
         this.urlWorldWeather = urlWorldWeather;
         this.country = country;
-        this.yandexWeathers = yandexWeathers;
-        this.ramblerWeathers = ramblerWeathers;
-        this.worldWeathers = worldWeathers;
+        this.weathers = weathers;
     }
 
     public int getId() {
@@ -57,35 +53,17 @@ public class City {
         return country;
     }
 
-    public List<Weather> getYandexWeathers() {
-        return yandexWeathers;
+    public List<Weather> getWeathers() {
+        return weathers;
     }
 
-    public List<Weather> getRamblerWeathers() { return ramblerWeathers; }
-
-    public List<Weather> getWorldWeathers() { return worldWeathers; }
-
-    public void addYandexWeather(Weather _weather) {
-        yandexWeathers.add(_weather);
+    public void addWeather(Weather weather) {
+        weathers.add(weather);
     }
 
-    public void addYandexWeather(List<Weather> _weathers) {
-        yandexWeathers.addAll(_weathers);
+    public void addWeather(List<Weather> weathers) {
+        this.weathers.addAll(weathers);
     }
 
-    public void addRamblerWeather(Weather _weather) {
-        ramblerWeathers.add(_weather);
-    }
 
-    public void addRamblerWeather(List<Weather> _weathers) {
-        ramblerWeathers.addAll(_weathers);
-    }
-
-    public void addWorldWeather(Weather _weather) {
-        worldWeathers.add(_weather);
-    }
-
-    public void addWorldWeather(List<Weather> _weathers) {
-        worldWeathers.addAll(_weathers);
-    }
 }

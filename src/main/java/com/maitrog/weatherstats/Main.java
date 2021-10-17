@@ -40,10 +40,8 @@ public class Main extends Application{
 
 
         stage.setScene(scene);
-
-        stage.setMinWidth(500);
         stage.setMinHeight(350);
-
+        stage.setMinWidth(400);
         stage.show();
         auth_stage.show();
     }

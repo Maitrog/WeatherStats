@@ -10,10 +10,10 @@ public class Weather {
     private final int maxTemperature;
     private final int pressure;
     private final int humidity;
-    private final Site site;
-    private final int cityId;
+    private final SiteType siteType;
+    private int cityId;
 
-    public Weather(int id, Date checkedDate, Date targetDate, int minTemperature, int maxTemperature, int pressure, int humidity, Site site, int cityId) {
+    public Weather(int id, Date checkedDate, Date targetDate, int minTemperature, int maxTemperature, int pressure, int humidity, SiteType siteType, int cityId) {
         this.id = id;
         this.checkedDate = checkedDate;
         this.targetDate = targetDate;
@@ -21,7 +21,7 @@ public class Weather {
         this.maxTemperature = maxTemperature;
         this.pressure = pressure;
         this.humidity = humidity;
-        this.site = site;
+        this.siteType = siteType;
         this.cityId = cityId;
     }
 
@@ -55,5 +55,13 @@ public class Weather {
 
     public int getCityId() {
         return cityId;
+    }
+
+    public SiteType getSiteType() {
+        return siteType;
+    }
+
+    public void setCityId(int cityId){
+        this.cityId = cityId;
     }
 }
