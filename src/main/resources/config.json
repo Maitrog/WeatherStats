@@ -2,9 +2,5 @@
   "server": "",
   "database": "",
   "user": "",
-  "password": "",
-  "integratedSecurity": true,
-  "encrypt": true,
-  "trustServerCertificate": true,
-  "loginTimeout": 30
+  "password": ""
 }
