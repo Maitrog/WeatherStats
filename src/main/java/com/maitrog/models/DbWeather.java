@@ -27,7 +27,7 @@ public class DbWeather {
         ConfigDb configDb = mapper.readValue(new File("src/main/resources/config.json"), ConfigDb.class);
         CON_STR = configDb.toString();
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        connection = DriverManager.getConnection(CON_STR);
+        connection = DriverManager.getConnection(CON_STR, configDb.user, configDb.password);
     }
 
     public List<City> getAllCities() {
