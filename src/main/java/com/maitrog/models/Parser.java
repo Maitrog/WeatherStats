@@ -138,8 +138,18 @@ public class Parser {
         for (int i = 1; i < tmp.length; i++) {
             int day = Integer.parseInt(tmp[i].split("<div>")[1].split("</div>")[0]);
             Date targetDate = createDate(day);
-            int maxTemp = Integer.parseInt(tmp[i].split("<span>")[1].split("В°</span>")[0].replace("в€’", "-"));
-            int minTemp = Integer.parseInt(tmp[i].split("<p>")[1].split("В°</p>")[0].replace("в€’", "-"));
+            int maxTemp;
+            int minTemp;
+            try {
+                maxTemp = Integer.parseInt(tmp[i].split("<span>")[1].split("В°</span>")[0].replace("в€’", "-"));
+            } catch (Exception e) {
+                maxTemp = 9999;
+            }
+            try {
+                minTemp = Integer.parseInt(tmp[i].split("<p>")[1].split("В°</p>")[0].replace("в€’", "-"));
+            } catch (Exception e){
+                minTemp = -9999;
+            }
 
             Weathers.add(new WeatherBuilder()
                     .targetDate(targetDate)
