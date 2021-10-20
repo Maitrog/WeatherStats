@@ -8,6 +8,7 @@ import com.maitrog.models.Parser;
 import com.maitrog.models.Weather;
 import com.maitrog.weatherstats.Main;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
@@ -22,6 +23,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.net.URL;
@@ -117,6 +121,20 @@ public class MainController implements Initializable {
 
         updateButton.setGraphic(new ImageView(image));
         Main.logger.log(Level.INFO, " Main window was initialized");
+        graphicsButton.setOnAction(new EventHandler<>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                try {
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/maitrog/views/Graphics.fxml"));
+                    Parent root1 = (Parent) fxmlLoader.load();
+                    Stage stage = new Stage();
+                    stage.setScene(new Scene(root1));
+                    stage.show();
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     public void updateDatabase(ActionEvent event) throws IOException {

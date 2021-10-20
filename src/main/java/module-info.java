@@ -9,6 +9,8 @@ module com.maitrog.weatherstats {
     requires jackson.databind;
     requires com.microsoft.sqlserver.jdbc;
 
+    requires jfreechart;
+
     opens com.maitrog.weatherstats to javafx.fxml, javafx.controls;
     opens com.maitrog.controllers to javafx.fxml, com.jfoenix, java.sql, javafx.controls, jackson.core, jackson.databind;
     opens com.maitrog.models to jackson.core, jackson.databind, java.sql, com.microsoft.sqlserver.jdbc;
