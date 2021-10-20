@@ -39,7 +39,7 @@ public class Parser {
             tmp = tmp[1].split("</h6>");
             var dateStr_tmp = tmp[0].split(",");
             dateStr = dateStr_tmp[0];
-            Date date = createDate(dateStr);
+            Date date = createDate(Integer.parseInt(dateStr.split(" ")[0]));
 
             tmp = tmp[1].split("<span class=\"temp__value temp__value_with-unit\">");
             int maxTemp = Integer.parseInt(tmp[1].split("</span>")[0].replace("в€’", "-"));
@@ -178,32 +178,6 @@ public class Parser {
         in.close();
 
         return response.toString();
-    }
-
-    private static Date createDate(String dateStr) {
-        int day = Integer.parseInt(dateStr.split(" ")[0]);
-        String monthStr = dateStr.split(" ")[1];
-        int month = switch (monthStr) {
-            case "февраля" -> Calendar.FEBRUARY;
-            case "марта" -> Calendar.MARCH;
-            case "апреля" -> Calendar.APRIL;
-            case "мая" -> Calendar.MAY;
-            case "июня" -> Calendar.JUNE;
-            case "июля" -> Calendar.JULY;
-            case "августа" -> Calendar.AUGUST;
-            case "сентября" -> Calendar.SEPTEMBER;
-            case "октября" -> Calendar.OCTOBER;
-            case "ноября" -> Calendar.NOVEMBER;
-            case "декабря" -> Calendar.DECEMBER;
-            default -> Calendar.JANUARY;
-        };
-
-        Calendar calendar = Calendar.getInstance();
-        if (month == calendar.get(Calendar.MONTH)) {
-            return new Date(new GregorianCalendar(calendar.get(Calendar.YEAR), month, day).getTimeInMillis());
-        } else {
-            return new Date(new GregorianCalendar(calendar.get(Calendar.YEAR) + 1, month, day).getTimeInMillis());
-        }
     }
 
     private static Date createDate(int day) {
