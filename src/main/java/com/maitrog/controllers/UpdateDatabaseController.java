@@ -1,10 +1,6 @@
 package com.maitrog.controllers;
 
-import com.jfoenix.controls.JFXButton;
-import com.maitrog.models.City;
-import com.maitrog.models.DbWeather;
-import com.maitrog.models.Parser;
-import com.maitrog.models.Weather;
+import com.maitrog.models.*;
 import com.maitrog.weatherstats.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

@@ -1,13 +1,16 @@
 package com.maitrog.models;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.maitrog.weatherstats.Main;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
 
 public class DbWeather {
     public String CON_STR;
@@ -26,6 +29,8 @@ public class DbWeather {
         ObjectMapper mapper = new ObjectMapper();
         ConfigDb configDb = mapper.readValue(new File("src/main/resources/config.json"), ConfigDb.class);
         CON_STR = configDb.toString();
+        CON_STR = String.format("jdbc:sqlserver://%s;"
+                + "database=%s;", configDb.server, configDb.database);
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         connection = DriverManager.getConnection(CON_STR, configDb.user, configDb.password);
     }
@@ -46,6 +51,7 @@ public class DbWeather {
             }
             return cities;
         } catch (SQLException throwables) {
+            Main.logger.log(Level.SEVERE, throwables.getMessage());
             throwables.printStackTrace();
             return Collections.emptyList();
         }
@@ -61,6 +67,7 @@ public class DbWeather {
             }
             return cities;
         } catch (SQLException throwables) {
+            Main.logger.log(Level.SEVERE, throwables.getMessage());
             throwables.printStackTrace();
             return Collections.emptyList();
         }
@@ -71,6 +78,7 @@ public class DbWeather {
             ResultSet weatherResult = statement.executeQuery("SELECT * FROM Weather");
             return parseWeatherResponse(weatherResult);
         } catch (SQLException throwables) {
+            Main.logger.log(Level.SEVERE, throwables.getMessage());
             throwables.printStackTrace();
             return Collections.emptyList();
         }
@@ -81,19 +89,73 @@ public class DbWeather {
             ResultSet weatherResult = statement.executeQuery(String.format("SELECT * FROM Weather WHERE CityId = %d", cityId));
             return parseWeatherResponse(weatherResult);
         } catch (SQLException throwables) {
+            Main.logger.log(Level.SEVERE, throwables.getMessage());
             throwables.printStackTrace();
             return Collections.emptyList();
         }
     }
 
-    public  List<Weather> getWeathers(int cityId, SiteType siteType)
-    {
+    public List<Weather> getWeathers(int cityId, SiteType siteType) {
         try (Statement statement = connection.createStatement()) {
-            ResultSet weatherResult = statement.executeQuery(String.format("SELECT * FROM Weather WHERE CityId = %d AND SiteType = %d", cityId, siteType));
+            ResultSet weatherResult = statement.executeQuery(String.format("SELECT * FROM Weather WHERE CityId = %d AND SiteType = %d", cityId, SiteType.getValue(siteType)));
             return parseWeatherResponse(weatherResult);
         } catch (SQLException throwables) {
+            Main.logger.log(Level.SEVERE, throwables.getMessage());
             throwables.printStackTrace();
             return Collections.emptyList();
+        }
+    }
+
+    public List<Weather> getWeathers(String nameRu, SiteType siteType, Date targetDate) {
+        SimpleDateFormat sdf = new SimpleDateFormat(
+                "dd.MM.yyyy");
+        try (Statement statement = connection.createStatement()) {
+            ResultSet weatherResult = statement.executeQuery(String.format("SELECT Weather.Id, CheckedDate, TargetDate, MinTemperature, MaxTemperature, Pressure, Humidity, SiteType, CityId " +
+                            "FROM Weather " +
+                            "JOIN Cities ON Cities.Id = Weather.CityId " +
+                            "WHERE Cities.NameRu = '%s' AND SiteType = %d AND TargetDate = '%s'",
+                            nameRu, SiteType.getValue(siteType), sdf.format(targetDate)));
+            return parseWeatherResponse(weatherResult);
+        } catch (SQLException throwables) {
+            Main.logger.log(Level.SEVERE, throwables.getMessage());
+            throwables.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+    public void addCity(City city) {
+        try (PreparedStatement statement = connection.prepareStatement(
+                "INSERT INTO Cities(NameRu, NameEn, UrlYandex, UrlRambler, UrlWorldWeather, Country) " +
+                        "VALUES (?, ?, ?, ?, ?, ?)")) {
+            statement.setObject(1, city.getNameRu());
+            statement.setObject(2, city.getNameEn());
+            statement.setObject(3, city.getUrlYandex());
+            statement.setObject(4, city.getUrlRambler());
+            statement.setObject(5, city.getUrlWorldWeather());
+            statement.setObject(6, city.getCountry());
+            statement.execute();
+        } catch (SQLException throwables) {
+            Main.logger.log(Level.SEVERE, throwables.getMessage());
+            throwables.printStackTrace();
+        }
+    }
+
+    public void addWeather(Weather weather) {
+        try (PreparedStatement statement = connection.prepareStatement(
+                "INSERT INTO Weather(CheckedDate, TargetDate, MinTemperature, MaxTemperature, Pressure, Humidity, SiteType, CityId) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
+            statement.setObject(1, weather.getCheckedDate());
+            statement.setObject(2, weather.getTargetDate());
+            statement.setObject(3, weather.getMinTemperature());
+            statement.setObject(4, weather.getMaxTemperature());
+            statement.setObject(5, weather.getPressure());
+            statement.setObject(6, weather.getHumidity());
+            statement.setObject(7, SiteType.getValue(weather.getSiteType()));
+            statement.setObject(8, weather.getCityId());
+            statement.execute();
+        } catch (SQLException throwables) {
+            Main.logger.log(Level.SEVERE, throwables.getMessage());
+            throwables.printStackTrace();
         }
     }
 
@@ -113,40 +175,6 @@ public class DbWeather {
                     .buildWeather());
         }
         return weathers;
-    }
-
-    public void addCity(City city) {
-        try (PreparedStatement statement = connection.prepareStatement(
-                "INSERT INTO Cities(NameRu, NameEn, UrlYandex, UrlRambler, UrlWorldWeather, Country) " +
-                        "VALUES (?, ?, ?, ?, ?, ?)")) {
-            statement.setObject(1, city.getNameRu());
-            statement.setObject(2, city.getNameEn());
-            statement.setObject(3, city.getUrlYandex());
-            statement.setObject(4, city.getUrlRambler());
-            statement.setObject(5, city.getUrlWorldWeather());
-            statement.setObject(6, city.getCountry());
-            statement.execute();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-    }
-
-    public void addWeather(Weather weather) {
-        try (PreparedStatement statement = connection.prepareStatement(
-                "INSERT INTO Weather(CheckedDate, TargetDate, MinTemperature, MaxTemperature, Pressure, Humidity, SiteType, CityId) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
-            statement.setObject(1, weather.getCheckedDate());
-            statement.setObject(2, weather.getTargetDate());
-            statement.setObject(3, weather.getMinTemperature());
-            statement.setObject(4, weather.getMaxTemperature());
-            statement.setObject(5, weather.getPressure());
-            statement.setObject(6, weather.getHumidity());
-            statement.setObject(7, SiteType.getValue(weather.getSiteType()));
-            statement.setObject(8, weather.getCityId());
-            statement.execute();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
     }
 }
 
