@@ -9,9 +9,20 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import java.io.IOException;
 import java.util.Objects;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class Main extends Application{
+
+    public static final Logger logger = Logger.getGlobal();
+    private final FileHandler fileHandler = new FileHandler("InfoLog.log");
+
+    public Main() throws IOException {
+    }
 
     public static void main(String[] args) {
 
@@ -20,8 +31,18 @@ public class Main extends Application{
 
     @Override
     public void start(Stage stage) throws Exception{
+        fileHandler.setFormatter(new SimpleFormatter());
+        logger.addHandler(fileHandler);
+        for (Object propertyKeyName:System.getProperties().keySet()){
+            logger.log(Level.INFO,propertyKeyName+" - "+System.getProperty(propertyKeyName.toString()));
+        }
+
+        logger.log(Level.INFO, "Start loading main window");
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/maitrog/views/Main.fxml")));
+        logger.log(Level.INFO, "Main window was loaded");
+        logger.log(Level.INFO, "Start loading authentication window");
         Parent auth_root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/maitrog/views/AuthWindow.fxml")));
+        logger.log(Level.INFO, "Authentication window was loaded");
 
         Scene scene = new Scene(root);
         Scene auth_window = new Scene(auth_root, 300, 400);

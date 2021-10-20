@@ -17,8 +17,8 @@
             <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
             <RowConstraints />
          </rowConstraints>
          <children>
@@ -27,12 +27,12 @@
 
                </graphic>
             </JFXButton>
-            <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" text="2" GridPane.rowIndex="1" />
-            <JFXButton fx:id="updateButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" onAction="#updateDatabase" GridPane.rowIndex="2" />
-            <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" text="4" GridPane.rowIndex="4" />
-            <JFXButton fx:id="graphicsButton" prefHeight="65.0" prefWidth="52.0" text="Graphics" GridPane.rowIndex="3" />
+            <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" text="2" GridPane.rowIndex="2" />
+            <JFXButton fx:id="updateButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" onAction="#updateDatabase" GridPane.rowIndex="3" />
+            <JFXButton fx:id="graphicsButton" prefHeight="65.0" prefWidth="52.0" text="Graphics" GridPane.rowIndex="4" />
+            <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" text="4" GridPane.rowIndex="5" />
          </children>
       </GridPane>
-      <JFXHamburger fx:id="hamburger" layoutX="10.0" layoutY="10.0" />
+      <JFXHamburger fx:id="hamburger" layoutX="10.0" layoutY="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="15.0" />
    </children>
 </AnchorPane>
