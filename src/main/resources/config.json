@@ -1,6 +1,6 @@
 {
-  "server": "",
-  "database": "",
-  "user": "",
-  "password": ""
+  "server": "93.188.41.69:1433",
+  "database": "WeatherStats",
+  "user": "admin",
+  "password": "BujhmLfdfqHf,jnfq"
 }
