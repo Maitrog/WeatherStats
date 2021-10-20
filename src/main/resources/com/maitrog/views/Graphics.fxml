@@ -11,8 +11,8 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maitrog.controllers.GraphicsController">
    <children>
-      <JFXButton fx:id="loadButton" layoutX="251.0" layoutY="367.0" onAction="#handleButtonAction" text="Load Line Chart" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="251.0" AnchorPane.rightAnchor="250.0" />
-      <LineChart fx:id="lineChart" layoutX="39.0" layoutY="54.0" prefHeight="313.0" prefWidth="524.0" title="LineChart" AnchorPane.bottomAnchor="33.0" AnchorPane.leftAnchor="39.0" AnchorPane.rightAnchor="37.0" AnchorPane.topAnchor="54.0">
+      <JFXButton fx:id="loadButton" layoutX="251.0" layoutY="367.0" onAction="#handleButtonAction" text="Load Line Chart" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="250.0" />
+      <LineChart fx:id="lineChart" layoutX="39.0" layoutY="54.0" prefHeight="313.0" prefWidth="524.0" title="Temperature Chart" AnchorPane.bottomAnchor="33.0" AnchorPane.leftAnchor="39.0" AnchorPane.rightAnchor="37.0" AnchorPane.topAnchor="54.0">
         <xAxis>
           <CategoryAxis side="BOTTOM" />
         </xAxis>

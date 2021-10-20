@@ -49,12 +49,21 @@ public class GraphicsController implements Initializable {
         List<Weather> targetDateWeather = new ArrayList<>();
         try {
             switch (comboBox.getValue()) {
-                case "Rambler" -> targetDateWeather = DbWeather.getInstance().getWeathers(textField.getText(), SiteType.Rambler,
-                        Date.valueOf(datePicker.getValue()));
-                case "Yandex" -> targetDateWeather = DbWeather.getInstance().getWeathers(textField.getText(), SiteType.Yandex,
-                        Date.valueOf(datePicker.getValue()));
-                case "WorldWeather" -> targetDateWeather = DbWeather.getInstance().getWeathers(textField.getText(),
-                        SiteType.WorldWeather, Date.valueOf(datePicker.getValue()));
+                case "Rambler" -> {
+                    targetDateWeather = DbWeather.getInstance().getWeathers(textField.getText(), SiteType.Rambler,
+                            Date.valueOf(datePicker.getValue()));
+                    series.setName("Rambler");
+                }
+                case "Yandex" -> {
+                    targetDateWeather = DbWeather.getInstance().getWeathers(textField.getText(), SiteType.Yandex,
+                            Date.valueOf(datePicker.getValue()));
+                    series.setName("Yandex");
+                }
+                case "WorldWeather" -> {
+                    targetDateWeather = DbWeather.getInstance().getWeathers(textField.getText(),
+                            SiteType.WorldWeather, Date.valueOf(datePicker.getValue()));
+                    series.setName("WorldWeather");
+                }
                 case "All" -> {
                     List<Weather> ramblerDateWeather;
                     List<Weather> yandexDateWeather;
@@ -73,16 +82,19 @@ public class GraphicsController implements Initializable {
                                 (weather.getMaxTemperature() - weather.getMinTemperature()) / 2 + weather.getMinTemperature()));
                     }
                     lineChart.getData().add(ramblerSeries);
+                    ramblerSeries.setName("Rambler");
                     for (Weather weather : yandexDateWeather) {
                         yandexSeries.getData().add(new XYChart.Data<>(weather.getCheckedDate().toString(),
                                 (weather.getMaxTemperature() - weather.getMinTemperature()) / 2 + weather.getMinTemperature()));
                     }
                     lineChart.getData().add(yandexSeries);
+                    yandexSeries.setName("Yandex");
                     for (Weather weather : worldDateWeather) {
                         worldSeries.getData().add(new XYChart.Data<>(weather.getCheckedDate().toString(),
                                 (weather.getMaxTemperature() - weather.getMinTemperature()) / 2 + weather.getMinTemperature()));
                     }
                     lineChart.getData().add(worldSeries);
+                    worldSeries.setName("WorldWeather");
                     return;
                 }
             }

@@ -4,13 +4,12 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXHamburger;
 import com.maitrog.weatherstats.Main;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -18,7 +17,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.Stage;
+import org.jfree.chart.ui.Align;
 
 import java.io.IOException;
 import java.net.URL;
@@ -42,6 +41,9 @@ public class MainController implements Initializable {
     @FXML
     private JFXButton graphicsButton;
 
+    @FXML
+    private JFXButton settingsButton;
+
     protected void openT() {
         if (task != null) {
             task.cancel();
@@ -51,8 +53,8 @@ public class MainController implements Initializable {
 
             @Override
             public void run() {
-                if (i < 14 && gridPane.getWidth() < 250) {
-                    gridPane.setPrefWidth(gridPane.getWidth() + 15);
+                if (i < 20 && gridPane.getWidth() < 350) {
+                    gridPane.setPrefWidth(gridPane.getWidth() + 18);
                 } else {
                     this.cancel();
                 }
@@ -60,8 +62,9 @@ public class MainController implements Initializable {
             }
         };
 
-        updateButton.setText("Обновить данные");
-        updateButton.setTextAlignment(TextAlignment.LEFT);
+        graphicsButton.setAlignment(Pos.CENTER_LEFT);
+        updateButton.setAlignment(Pos.CENTER_LEFT);
+        settingsButton.setAlignment(Pos.CENTER_LEFT);
         Thread open = new Thread(() -> {
             animTimer = new Timer();
             animTimer.schedule(task, 0, 16);
@@ -79,8 +82,8 @@ public class MainController implements Initializable {
 
             @Override
             public void run() {
-                if (i < 14 && gridPane.getWidth() > 50) {
-                    gridPane.setPrefWidth(gridPane.getWidth() - 15);
+                if (i < 20 && gridPane.getWidth() > 50) {
+                    gridPane.setPrefWidth(gridPane.getWidth() - 18);
                 } else {
                     this.cancel();
                 }
@@ -112,25 +115,7 @@ public class MainController implements Initializable {
                 closeT();
             }
         });
-
-        Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/refresh.png")));
-
-        updateButton.setGraphic(new ImageView(image));
         Main.logger.log(Level.INFO, " Main window was initialized");
-//        graphicsButton.setOnAction(new EventHandler<>() {
-//            @Override
-//            public void handle(ActionEvent actionEvent) {
-//                try {
-//                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/maitrog/views/Graphics.fxml"));
-//                    Parent root1 = (Parent) fxmlLoader.load();
-//                    Stage stage = new Stage();
-//                    stage.setScene(new Scene(root1));
-//                    stage.show();
-//                } catch(Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
     }
 
     public void updateDatabase(ActionEvent event) throws IOException {
@@ -141,7 +126,7 @@ public class MainController implements Initializable {
 
         if (children.size() == 3){
             Main.logger.log(Level.INFO, "Content was detected in main window");
-            children.remove(children.size() - 1);
+            children.remove(0);
             Main.logger.log(Level.INFO, "Content was deleted in main window");
         }
         if (children.size() < 3) {
@@ -151,9 +136,11 @@ public class MainController implements Initializable {
             AnchorPane.setBottomAnchor(anchorPane, 0.0);
             AnchorPane.setLeftAnchor(anchorPane, 50.0);
             AnchorPane.setRightAnchor(anchorPane, 0.0);
-            AnchorPane.setTopAnchor(anchorPane, 0.0);
+            AnchorPane.setTopAnchor(anchorPane, 50.0);
 
             children.add(anchorPane);
+            anchorPane.toBack();
+            anchorPane.toBack();
         }
     }
 
@@ -164,7 +151,7 @@ public class MainController implements Initializable {
         var children = pane.getChildren();
         if (children.size() == 3){
             Main.logger.log(Level.INFO, "Content was detected in main window");
-            children.remove(children.size() - 1);
+            children.remove(0);
             Main.logger.log(Level.INFO, "Content was deleted in main window");
         }
         if (children.size() < 3) {
@@ -174,9 +161,11 @@ public class MainController implements Initializable {
             AnchorPane.setBottomAnchor(anchorPane, 0.0);
             AnchorPane.setLeftAnchor(anchorPane, 50.0);
             AnchorPane.setRightAnchor(anchorPane, 0.0);
-            AnchorPane.setTopAnchor(anchorPane, 0.0);
+            AnchorPane.setTopAnchor(anchorPane, 50.0);
 
             children.add(anchorPane);
+            anchorPane.toBack();
+            anchorPane.toBack();
         }
     }
 }

@@ -41,7 +41,7 @@ public class Main extends Application{
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/maitrog/views/Main.fxml")));
         logger.log(Level.INFO, "Main window was loaded");
         logger.log(Level.INFO, "Start loading authentication window");
-        Parent auth_root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/maitrog/views/AuthWindow.fxml")));
+        Parent authRoot = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/maitrog/views/AuthWindow.fxml")));
         logger.log(Level.INFO, "Authentication window was loaded");
         Parent regRoot = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/maitrog/views/RegWindow.fxml")));
 
@@ -63,8 +63,8 @@ public class Main extends Application{
 
 
         stage.setScene(scene);
-        stage.setMinHeight(350);
-        stage.setMinWidth(400);
+        stage.setMinHeight(400);
+        stage.setMinWidth(650);
         stage.show();
         authStage.show();
     }
