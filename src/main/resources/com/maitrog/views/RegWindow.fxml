@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maitrog.controllers.AuthController">
+   <children>
+      <JFXTextArea fx:id="login" layoutX="70.0" layoutY="50.0" prefHeight="0.0" prefRowCount="1" prefWidth="160.0" />
+      <JFXTextArea fx:id="password" layoutX="70.0" layoutY="132.0" prefHeight="0.0" prefRowCount="1" prefWidth="160.0" />
+      <JFXTextArea fx:id="confirmPassword" layoutX="70.0" layoutY="182.0" prefHeight="0.0" prefRowCount="1" prefWidth="160.0" />
+      <JFXButton fx:id="register" layoutX="-128.0" layoutY="269.0" text="Зарегистрироваться" />
+      <JFXButton fx:id="authorize" layoutX="-89.0" layoutY="200.0" text="Войти" />
+      <JFXButton fx:id="registerFinal" layoutX="85.0" layoutY="275.0" text="Зарегистрироваться" />
+      <Label layoutX="70.0" layoutY="93.0" prefHeight="18.0" prefWidth="121.0" text="Логин" />
+      <Label layoutX="70.0" layoutY="173.0" prefHeight="18.0" prefWidth="127.0" text="Пароль" />
+      <Label layoutX="70.0" layoutY="226.0" prefHeight="18.0" prefWidth="139.0" text="Подтвердите пароль" />
+   </children>
+</AnchorPane>

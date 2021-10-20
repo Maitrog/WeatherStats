@@ -43,16 +43,18 @@ public class Main extends Application{
         logger.log(Level.INFO, "Start loading authentication window");
         Parent auth_root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/maitrog/views/AuthWindow.fxml")));
         logger.log(Level.INFO, "Authentication window was loaded");
+        Parent regRoot = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/maitrog/views/RegWindow.fxml")));
 
         Scene scene = new Scene(root);
-        Scene auth_window = new Scene(auth_root, 300, 400);
+        Scene authWindow = new Scene(authRoot, 300, 400);
+        Scene regWindow = new Scene(regRoot, 300, 400);
 
-        Stage auth_stage = new Stage();
-        auth_stage.setResizable(false);
-        auth_stage.initModality(Modality.APPLICATION_MODAL);
-        auth_stage.initOwner(stage);
-        auth_stage.setScene(auth_window);
-        auth_stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+        Stage authStage = new Stage();
+        authStage.setResizable(false);
+        authStage.initModality(Modality.APPLICATION_MODAL);
+        authStage.initOwner(stage);
+        authStage.setScene(authWindow);
+        authStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
                 stage.close();
@@ -64,6 +66,6 @@ public class Main extends Application{
         stage.setMinHeight(350);
         stage.setMinWidth(400);
         stage.show();
-        auth_stage.show();
+        authStage.show();
     }
 }
