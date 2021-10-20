@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maitrog.controllers.UpdateDatabaseController">
+   <children>
+      <Text layoutX="14.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Обновление данных" wrappingWidth="221.91015625" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <Text layoutX="14.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Последнее обновление:" AnchorPane.leftAnchor="15.0">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <Text fx:id="lastCheckDate" layoutX="243.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="17.10.2021" AnchorPane.leftAnchor="240.0">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <ProgressBar fx:id="progressBar" layoutX="14.0" layoutY="82.0" prefHeight="27.0" prefWidth="519.0" progress="0.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+      <JFXButton fx:id="updateButton" layoutX="409.0" layoutY="126.0" onAction="#updateDatabase" prefHeight="45.0" prefWidth="126.0" text="Обновить" AnchorPane.rightAnchor="15.0" />
+   </children>
+</AnchorPane>

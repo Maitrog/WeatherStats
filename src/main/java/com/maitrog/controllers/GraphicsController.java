@@ -1,0 +1,108 @@
+package com.maitrog.controllers;
+
+import com.jfoenix.controls.JFXComboBox;
+import com.maitrog.models.*;
+
+import java.net.URL;
+import java.sql.Date;
+import java.util.ResourceBundle;
+
+import com.jfoenix.controls.JFXButton;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+
+import javafx.fxml.Initializable;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TextField;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.*;
+
+public class GraphicsController implements Initializable {
+
+    @FXML
+    private LineChart<String, Number> lineChart;
+
+    @FXML
+    private JFXButton loadButton;
+
+    @FXML
+    private JFXComboBox<String> comboBox;
+
+    @FXML
+    private TextField textField;
+
+    @FXML
+    private DatePicker datePicker;
+
+    @FXML
+    private void handleButtonAction(ActionEvent e) {
+        lineChart.getData().clear();
+        addData();
+    }
+
+    private void addData() {
+        XYChart.Series<String, Number> series = new XYChart.Series();
+        List<Weather> targetDateWeather = new ArrayList<>();
+        try {
+            switch (comboBox.getValue()) {
+                case "Rambler" -> targetDateWeather = DbWeather.getInstance().getWeathers(textField.getText(), SiteType.Rambler,
+                        Date.valueOf(datePicker.getValue()));
+                case "Yandex" -> targetDateWeather = DbWeather.getInstance().getWeathers(textField.getText(), SiteType.Yandex,
+                        Date.valueOf(datePicker.getValue()));
+                case "WorldWeather" -> targetDateWeather = DbWeather.getInstance().getWeathers(textField.getText(),
+                        SiteType.WorldWeather, Date.valueOf(datePicker.getValue()));
+                case "All" -> {
+                    List<Weather> ramblerDateWeather;
+                    List<Weather> yandexDateWeather;
+                    List<Weather> worldDateWeather;
+                    XYChart.Series<String, Number> ramblerSeries = new XYChart.Series();
+                    XYChart.Series<String, Number> yandexSeries = new XYChart.Series();
+                    XYChart.Series<String, Number> worldSeries = new XYChart.Series();
+                    ramblerDateWeather = DbWeather.getInstance().getWeathers(textField.getText(), SiteType.Rambler,
+                            Date.valueOf(datePicker.getValue()));
+                    yandexDateWeather = DbWeather.getInstance().getWeathers(textField.getText(), SiteType.Yandex,
+                            Date.valueOf(datePicker.getValue()));
+                    worldDateWeather = DbWeather.getInstance().getWeathers(textField.getText(), SiteType.WorldWeather,
+                            Date.valueOf(datePicker.getValue()));
+                    for (Weather weather : ramblerDateWeather) {
+                        ramblerSeries.getData().add(new XYChart.Data<>(weather.getCheckedDate().toString(),
+                                (weather.getMaxTemperature() - weather.getMinTemperature()) / 2 + weather.getMinTemperature()));
+                    }
+                    lineChart.getData().add(ramblerSeries);
+                    for (Weather weather : yandexDateWeather) {
+                        yandexSeries.getData().add(new XYChart.Data<>(weather.getCheckedDate().toString(),
+                                (weather.getMaxTemperature() - weather.getMinTemperature()) / 2 + weather.getMinTemperature()));
+                    }
+                    lineChart.getData().add(yandexSeries);
+                    for (Weather weather : worldDateWeather) {
+                        worldSeries.getData().add(new XYChart.Data<>(weather.getCheckedDate().toString(),
+                                (weather.getMaxTemperature() - weather.getMinTemperature()) / 2 + weather.getMinTemperature()));
+                    }
+                    lineChart.getData().add(worldSeries);
+                    return;
+                }
+            }
+
+            for (Weather weather : targetDateWeather) {
+                series.getData().add(new XYChart.Data<>(weather.getCheckedDate().toString(),
+                        (weather.getMaxTemperature() - weather.getMinTemperature()) / 2 + weather.getMinTemperature()));
+            }
+            lineChart.getData().add(series);
+
+        } catch (SQLException | ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        comboBox.getItems().add("All");
+        comboBox.getItems().add("Yandex");
+        comboBox.getItems().add("Rambler");
+        comboBox.getItems().add("WorldWeather");
+    }
+}
