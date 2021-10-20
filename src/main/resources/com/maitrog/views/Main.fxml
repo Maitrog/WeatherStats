@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maitrog.controllers.MainController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maitrog.controllers.MainController">
    <children>
       <GridPane fx:id="gridPane" maxHeight="400.0" maxWidth="150.0" minHeight="350.0" minWidth="50.0" prefHeight="400.0" prefWidth="52.0" style="-fx-background-color: grey;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
          <columnConstraints>
@@ -27,9 +27,8 @@
 
                </graphic>
             </JFXButton>
-            <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" text="2" GridPane.rowIndex="2" />
+            <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" onAction="#graphics" text="Graphics" GridPane.rowIndex="2" />
             <JFXButton fx:id="updateButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" onAction="#updateDatabase" GridPane.rowIndex="3" />
-            <JFXButton fx:id="graphicsButton" prefHeight="65.0" prefWidth="52.0" text="Graphics" GridPane.rowIndex="4" />
             <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" text="4" GridPane.rowIndex="5" />
          </children>
       </GridPane>

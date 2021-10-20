@@ -106,15 +106,15 @@ public class DbWeather {
         }
     }
 
-    public List<Weather> getWeathers(String nameRu, SiteType siteType, Date targetDate) {
+    public List<Weather> getWeathers(String name, SiteType siteType, Date targetDate) {
         SimpleDateFormat sdf = new SimpleDateFormat(
                 "dd.MM.yyyy");
         try (Statement statement = connection.createStatement()) {
             ResultSet weatherResult = statement.executeQuery(String.format("SELECT Weather.Id, CheckedDate, TargetDate, MinTemperature, MaxTemperature, Pressure, Humidity, SiteType, CityId " +
                             "FROM Weather " +
                             "JOIN Cities ON Cities.Id = Weather.CityId " +
-                            "WHERE Cities.NameRu = '%s' AND SiteType = %d AND TargetDate = '%s'",
-                            nameRu, SiteType.getValue(siteType), sdf.format(targetDate)));
+                            "WHERE (Cities.NameRu = '%s' OR Cities.NameEn = '%s') AND SiteType = %d AND TargetDate = '%s'",
+                            name, name, SiteType.getValue(siteType), sdf.format(targetDate)));
             return parseWeatherResponse(weatherResult);
         } catch (SQLException throwables) {
             Main.logger.log(Level.SEVERE, throwables.getMessage());
