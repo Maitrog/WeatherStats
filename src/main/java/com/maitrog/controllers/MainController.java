@@ -1,23 +1,21 @@
 package com.maitrog.controllers;
 
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXHamburger;
 import com.maitrog.weatherstats.Main;
+import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.TextAlignment;
-import org.jfree.chart.ui.Align;
+import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.net.URL;
@@ -36,13 +34,19 @@ public class MainController implements Initializable {
     private GridPane gridPane;
 
     @FXML
-    private JFXButton updateButton;
+    private MFXButton updateButton;
 
     @FXML
-    private JFXButton graphicsButton;
+    private MFXButton graphicsButton;
 
     @FXML
-    private JFXButton settingsButton;
+    private MFXButton settingsButton;
+
+    @FXML
+    private Text title;
+
+    @FXML
+    private AnchorPane mainScene;
 
     protected void openT() {
         if (task != null) {
@@ -50,11 +54,13 @@ public class MainController implements Initializable {
         }
         task = new TimerTask() {
             int i = 0;
+            final Node anchorPane = mainScene.getChildren().get(0);
 
             @Override
             public void run() {
                 if (i < 20 && gridPane.getWidth() < 350) {
                     gridPane.setPrefWidth(gridPane.getWidth() + 18);
+                    AnchorPane.setLeftAnchor(anchorPane, gridPane.getWidth());
                 } else {
                     this.cancel();
                 }
@@ -79,11 +85,13 @@ public class MainController implements Initializable {
         }
         task = new TimerTask() {
             int i = 0;
+            final Node anchorPane = mainScene.getChildren().get(0);
 
             @Override
             public void run() {
                 if (i < 20 && gridPane.getWidth() > 50) {
                     gridPane.setPrefWidth(gridPane.getWidth() - 18);
+                    AnchorPane.setLeftAnchor(anchorPane, gridPane.getWidth());
                 } else {
                     this.cancel();
                 }
@@ -116,56 +124,34 @@ public class MainController implements Initializable {
             }
         });
         Main.logger.log(Level.INFO, " Main window was initialized");
+        try {
+            graphics(new ActionEvent());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void updateDatabase(ActionEvent event) throws IOException {
+        title.setText("Update data");
         Parent parent = updateButton.getParent().getParent();
-        Pane pane = (Pane) parent;
-
-        var children = pane.getChildren();
-
-        if (children.size() == 3){
-            Main.logger.log(Level.INFO, "Content was detected in main window");
-            children.remove(0);
-            Main.logger.log(Level.INFO, "Content was deleted in main window");
-        }
-        if (children.size() < 3) {
-            Main.logger.log(Level.INFO, "Update database window start loading");
-            AnchorPane anchorPane = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/maitrog/views/UpdateDatabase.fxml")));
-            Main.logger.log(Level.INFO, "Update database window was loaded");
-            AnchorPane.setBottomAnchor(anchorPane, 0.0);
-            AnchorPane.setLeftAnchor(anchorPane, 50.0);
-            AnchorPane.setRightAnchor(anchorPane, 0.0);
-            AnchorPane.setTopAnchor(anchorPane, 50.0);
-
-            children.add(anchorPane);
-            anchorPane.toBack();
-            anchorPane.toBack();
-        }
+        loadScene((Pane) parent, "/com/maitrog/views/UpdateDatabase.fxml");
     }
 
     public  void graphics(ActionEvent event) throws IOException {
-        Parent parent = updateButton.getParent().getParent();
-        Pane pane = (Pane) parent;
+        title.setText("Temperature charts");
+        Parent parent = graphicsButton.getParent().getParent();
+        loadScene((Pane) parent, "/com/maitrog/views/Graphics.fxml");
+    }
 
+    private void loadScene(Pane pane, String s) throws IOException {
         var children = pane.getChildren();
-        if (children.size() == 3){
-            Main.logger.log(Level.INFO, "Content was detected in main window");
-            children.remove(0);
-            Main.logger.log(Level.INFO, "Content was deleted in main window");
-        }
-        if (children.size() < 3) {
-            Main.logger.log(Level.INFO, "Update database window start loading");
-            AnchorPane anchorPane = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/maitrog/views/Graphics.fxml")));
-            Main.logger.log(Level.INFO, "Update database window was loaded");
-            AnchorPane.setBottomAnchor(anchorPane, 0.0);
-            AnchorPane.setLeftAnchor(anchorPane, 50.0);
-            AnchorPane.setRightAnchor(anchorPane, 0.0);
-            AnchorPane.setTopAnchor(anchorPane, 50.0);
-
-            children.add(anchorPane);
-            anchorPane.toBack();
-            anchorPane.toBack();
-        }
+        Main.logger.log(Level.INFO, "Scene start loading");
+        AnchorPane anchorPane = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(s)));
+        Main.logger.log(Level.INFO, "Scene was loaded");
+        AnchorPane.setBottomAnchor(anchorPane, 0.0);
+        AnchorPane.setLeftAnchor(anchorPane, 50.0);
+        AnchorPane.setRightAnchor(anchorPane, 0.0);
+        AnchorPane.setTopAnchor(anchorPane, 50.0);
+        children.set(0, anchorPane);
     }
 }

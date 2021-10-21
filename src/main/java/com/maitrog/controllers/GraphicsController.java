@@ -1,21 +1,20 @@
 package com.maitrog.controllers;
 
-import com.jfoenix.controls.JFXComboBox;
 import com.maitrog.models.*;
 
 import java.net.URL;
 import java.sql.Date;
 import java.util.ResourceBundle;
 
-import com.jfoenix.controls.JFXButton;
+import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXDatePicker;
+import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -27,16 +26,13 @@ public class GraphicsController implements Initializable {
     private LineChart<String, Number> lineChart;
 
     @FXML
-    private JFXButton loadButton;
+    private MFXComboBox<String> comboBox;
 
     @FXML
-    private JFXComboBox<String> comboBox;
+    private MFXTextField textField;
 
     @FXML
-    private TextField textField;
-
-    @FXML
-    private DatePicker datePicker;
+    private MFXDatePicker datePicker;
 
     @FXML
     private void handleButtonAction(ActionEvent e) {
@@ -48,20 +44,20 @@ public class GraphicsController implements Initializable {
         XYChart.Series<String, Number> series = new XYChart.Series();
         List<Weather> targetDateWeather = new ArrayList<>();
         try {
-            switch (comboBox.getValue()) {
+            switch (comboBox.getSelectedValue()) {
                 case "Rambler" -> {
                     targetDateWeather = DbWeather.getInstance().getWeathers(textField.getText(), SiteType.Rambler,
-                            Date.valueOf(datePicker.getValue()));
+                            Date.valueOf(datePicker.getDate()));
                     series.setName("Rambler");
                 }
                 case "Yandex" -> {
                     targetDateWeather = DbWeather.getInstance().getWeathers(textField.getText(), SiteType.Yandex,
-                            Date.valueOf(datePicker.getValue()));
+                            Date.valueOf(datePicker.getDate()));
                     series.setName("Yandex");
                 }
                 case "WorldWeather" -> {
                     targetDateWeather = DbWeather.getInstance().getWeathers(textField.getText(),
-                            SiteType.WorldWeather, Date.valueOf(datePicker.getValue()));
+                            SiteType.WorldWeather, Date.valueOf(datePicker.getDate()));
                     series.setName("WorldWeather");
                 }
                 case "All" -> {
@@ -72,11 +68,11 @@ public class GraphicsController implements Initializable {
                     XYChart.Series<String, Number> yandexSeries = new XYChart.Series();
                     XYChart.Series<String, Number> worldSeries = new XYChart.Series();
                     ramblerDateWeather = DbWeather.getInstance().getWeathers(textField.getText(), SiteType.Rambler,
-                            Date.valueOf(datePicker.getValue()));
+                            Date.valueOf(datePicker.getDate()));
                     yandexDateWeather = DbWeather.getInstance().getWeathers(textField.getText(), SiteType.Yandex,
-                            Date.valueOf(datePicker.getValue()));
+                            Date.valueOf(datePicker.getDate()));
                     worldDateWeather = DbWeather.getInstance().getWeathers(textField.getText(), SiteType.WorldWeather,
-                            Date.valueOf(datePicker.getValue()));
+                            Date.valueOf(datePicker.getDate()));
                     for (Weather weather : ramblerDateWeather) {
                         ramblerSeries.getData().add(new XYChart.Data<>(weather.getCheckedDate().toString(),
                                 (weather.getMaxTemperature() - weather.getMinTemperature()) / 2 + weather.getMinTemperature()));

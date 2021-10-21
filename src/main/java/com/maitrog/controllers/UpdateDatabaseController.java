@@ -5,7 +5,6 @@ import com.maitrog.weatherstats.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
@@ -14,10 +13,11 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
+import io.github.palexdev.materialfx.controls.MFXProgressBar;
 
 public class UpdateDatabaseController implements Initializable {
     @FXML
-    private ProgressBar progressBar;
+    private MFXProgressBar progressBar;
 
     @FXML
     private Text lastCheckDate;
