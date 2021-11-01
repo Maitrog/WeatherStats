@@ -30,35 +30,39 @@ public class UpdateDatabaseController implements Initializable {
     }
 
     public void updateDatabase(ActionEvent event) {
-        Main.logger.log(Level.INFO, "Start update database");
-        Thread update = new Thread(() -> {
-            try {
-                progressBar.setProgress(0);
-                List<City> cities = DbWeather.getInstance().getAllCities();
-                double step = 1.0 / cities.size();
-                for (City city :
-                        cities) {
-                    if (city.getId() > lastCheckedCityId) {
-                        List<Weather> weathers = Parser.parseYandexWeather(city.getUrlYandex());
-                        weathers.addAll(Parser.parseRambler(city.getUrlRambler()));
-                        weathers.addAll(Parser.parseWorldWeather(city.getUrlWorldWeather()));
+        Thread update = new Thread();
+        if(Main.user.getRole() == Role.ADMIN)
+        {
+            Main.logger.log(Level.INFO, "Start update database");
+            update = new Thread(() -> {
+                try {
+                    progressBar.setProgress(0);
+                    List<City> cities = DbWeather.getInstance().getAllCities();
+                    double step = 1.0 / cities.size();
+                    for (City city :
+                            cities) {
+                        if (city.getId() > lastCheckedCityId) {
+                            List<Weather> weathers = Parser.parseYandexWeather(city.getUrlYandex());
+                            weathers.addAll(Parser.parseRambler(city.getUrlRambler()));
+                            weathers.addAll(Parser.parseWorldWeather(city.getUrlWorldWeather()));
 
-                        for (Weather weather : weathers) {
-                            weather.setCityId(city.getId());
-                            DbWeather.getInstance().addWeather(weather);
+                            for (Weather weather : weathers) {
+                                weather.setCityId(city.getId());
+                                DbWeather.getInstance().addWeather(weather);
+                            }
+                            lastCheckedCityId = city.getId();
                         }
-                        lastCheckedCityId = city.getId();
+                        progressBar.setProgress(progressBar.getProgress() + step);
                     }
-                    progressBar.setProgress(progressBar.getProgress() + step);
-                }
-                lastCheckedCityId = 0;
-                Main.logger.log(Level.INFO, "Database was updated");
-            } catch (SQLException | ClassNotFoundException | IOException e) {
+                    lastCheckedCityId = 0;
+                    Main.logger.log(Level.INFO, "Database was updated");
+                } catch (SQLException | ClassNotFoundException | IOException e) {
 //                Main.logger.log(Level.SEVERE, String.format("Update database was crashed. Exception: %s", e.getMessage()));
-                Main.logger.log(Level.SEVERE, "Update database was crashed. Exception: ", e.getMessage());
-                e.printStackTrace();
-            }
-        });
+                    Main.logger.log(Level.SEVERE, "Update database was crashed. Exception: ", e.getMessage());
+                    e.printStackTrace();
+                }
+            });
+        }
         update.setDaemon(true);
         update.start();
     }

@@ -1,5 +1,7 @@
 package com.maitrog.weatherstats;
 
+import com.maitrog.models.Role;
+import com.maitrog.models.User;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -17,8 +19,8 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 public class Main extends Application{
-
     public static final Logger logger = Logger.getGlobal();
+    public static User user = null;
     private final FileHandler fileHandler = new FileHandler("InfoLog.log");
 
     public Main() throws IOException {
@@ -31,6 +33,7 @@ public class Main extends Application{
 
     @Override
     public void start(Stage stage) throws Exception{
+
         fileHandler.setFormatter(new SimpleFormatter());
         logger.addHandler(fileHandler);
         for (Object propertyKeyName:System.getProperties().keySet()){

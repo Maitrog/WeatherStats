@@ -3,10 +3,15 @@ package com.maitrog.models;
 public class User {
     private String login;
     private String passwordHash;
+    private Role role;
 
-    public User(String login, String passwordHash) {
+    public User(String login, String passwordHash, Role role) {
         this.login = login;
         this.passwordHash = passwordHash;
+        this.role = role;
+    }
+
+    public User() {
     }
 
     public String getLogin() {
@@ -17,6 +22,8 @@ public class User {
         return passwordHash;
     }
 
+    public Role getRole() { return role; }
+
     public void setLogin(String login) {
         this.login = login;
     }
@@ -24,4 +31,6 @@ public class User {
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
     }
+
+    public void setRole(Role role) { this.role = role; }
 }
