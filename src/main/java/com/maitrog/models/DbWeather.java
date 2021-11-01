@@ -29,8 +29,6 @@ public class DbWeather {
         ObjectMapper mapper = new ObjectMapper();
         ConfigDb configDb = mapper.readValue(new File("src/main/resources/config.json"), ConfigDb.class);
         CON_STR = configDb.toString();
-        CON_STR = String.format("jdbc:sqlserver://%s;"
-                + "database=%s;", configDb.server, configDb.database);
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         connection = DriverManager.getConnection(CON_STR, configDb.user, configDb.password);
     }
@@ -86,7 +84,7 @@ public class DbWeather {
 
     public List<Weather> getWeathers(int cityId) {
         try (Statement statement = connection.createStatement()) {
-            ResultSet weatherResult = statement.executeQuery(String.format("SELECT * FROM Weather WHERE CityId = %d", cityId));
+            ResultSet weatherResult = statement.executeQuery(String.format("SELECT * FROM Weather WHERE CityId = %d ORDER BY(CheckedDate)", cityId));
             return parseWeatherResponse(weatherResult);
         } catch (SQLException throwables) {
             Main.logger.log(Level.SEVERE, throwables.getMessage());
@@ -97,7 +95,7 @@ public class DbWeather {
 
     public List<Weather> getWeathers(int cityId, SiteType siteType) {
         try (Statement statement = connection.createStatement()) {
-            ResultSet weatherResult = statement.executeQuery(String.format("SELECT * FROM Weather WHERE CityId = %d AND SiteType = %d", cityId, SiteType.getValue(siteType)));
+            ResultSet weatherResult = statement.executeQuery(String.format("SELECT * FROM Weather WHERE CityId = %d AND SiteType = %d ORDER BY(CheckedDate)", cityId, SiteType.getValue(siteType)));
             return parseWeatherResponse(weatherResult);
         } catch (SQLException throwables) {
             Main.logger.log(Level.SEVERE, throwables.getMessage());
@@ -113,7 +111,8 @@ public class DbWeather {
             ResultSet weatherResult = statement.executeQuery(String.format("SELECT Weather.Id, CheckedDate, TargetDate, MinTemperature, MaxTemperature, Pressure, Humidity, SiteType, CityId " +
                             "FROM Weather " +
                             "JOIN Cities ON Cities.Id = Weather.CityId " +
-                            "WHERE (Cities.NameRu = '%s' OR Cities.NameEn = '%s') AND SiteType = %d AND TargetDate = '%s'",
+                            "WHERE (Cities.NameRu = '%s' OR Cities.NameEn = '%s') AND SiteType = %d AND TargetDate = '%s'" +
+                            "ORDER BY(CheckedDate)",
                             name, name, SiteType.getValue(siteType), sdf.format(targetDate)));
             return parseWeatherResponse(weatherResult);
         } catch (SQLException throwables) {
@@ -175,6 +174,38 @@ public class DbWeather {
                     .buildWeather());
         }
         return weathers;
+    }
+
+    public User getUser(String login)
+    {
+        try (Statement statement = connection.createStatement()) {
+            ResultSet userResult = statement.executeQuery(String.format("SELECT * FROM Users WHERE Login = %s", login));
+            User user = new User();
+            while (userResult.next()){
+                user.setLogin(userResult.getString("Login"));
+                user.setPasswordHash(userResult.getString("PasswordHash"));
+                user.setRole(userResult.getInt("RoleId"));
+            }
+            return user;
+        } catch (SQLException throwables) {
+            Main.logger.log(Level.SEVERE, throwables.getMessage());
+            throwables.printStackTrace();
+            return new User();
+        }
+    }
+
+    public void addUser(User user){
+        try (PreparedStatement statement = connection.prepareStatement(
+                "INSERT INTO Users(Login, PasswordHash, RoleId) " +
+                        "VALUES (?, ?, ?)")) {
+            statement.setObject(1, user.getLogin());
+            statement.setObject(2, user.getPasswordHash());
+            statement.setObject(3, user.getRole());
+            statement.execute();
+        } catch (SQLException throwables) {
+            Main.logger.log(Level.SEVERE, throwables.getMessage());
+            throwables.printStackTrace();
+        }
     }
 }
 
