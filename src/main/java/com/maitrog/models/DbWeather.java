@@ -179,12 +179,12 @@ public class DbWeather {
     public User getUser(String login)
     {
         try (Statement statement = connection.createStatement()) {
-            ResultSet userResult = statement.executeQuery(String.format("SELECT * FROM Users WHERE Login = %s", login));
+            ResultSet userResult = statement.executeQuery(String.format("SELECT * FROM Users WHERE Login = '%s'", login));
             User user = new User();
             while (userResult.next()){
                 user.setLogin(userResult.getString("Login"));
                 user.setPasswordHash(userResult.getString("PasswordHash"));
-                user.setRole(userResult.getInt("RoleId"));
+                user.setRole(Role.values()[userResult.getInt("RoleId")]);
             }
             return user;
         } catch (SQLException throwables) {
@@ -200,7 +200,7 @@ public class DbWeather {
                         "VALUES (?, ?, ?)")) {
             statement.setObject(1, user.getLogin());
             statement.setObject(2, user.getPasswordHash());
-            statement.setObject(3, user.getRole());
+            statement.setObject(3, Role.getValue(user.getRole()));
             statement.execute();
         } catch (SQLException throwables) {
             Main.logger.log(Level.SEVERE, throwables.getMessage());

@@ -78,7 +78,13 @@ public class Parser {
                 var date_tmp = tmp[i].split("</span></span>");
                 if (date_tmp.length == 3) {
                     String[] day_tmp = date_tmp[0].split("<!--");
-                    int day = Integer.parseInt(day_tmp[0].split("\">")[4]);
+                    int day;
+                    try {
+                        day = Integer.parseInt(day_tmp[0].split("\">")[4]);
+                    }
+                    catch (NumberFormatException e){
+                        day = Integer.parseInt(day_tmp[0].split("\">")[5]);
+                    }
                     Date targetDate = createDate(day);
 
                     String[] data_tmp = date_tmp[2].split("<!-- -->");

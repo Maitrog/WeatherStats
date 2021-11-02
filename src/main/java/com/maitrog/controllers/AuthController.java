@@ -3,6 +3,7 @@ package com.maitrog.controllers;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.validation.RequiredFieldValidator;
+import com.maitrog.models.DbWeather;
 import com.maitrog.models.Role;
 import com.maitrog.models.User;
 import com.maitrog.weatherstats.Main;
@@ -23,11 +24,13 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.sql.SQLException;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.function.Supplier;
@@ -68,16 +71,13 @@ public class AuthController implements Initializable {
 
             @Override
             public boolean isValid() {
-                if(login.getText().equals(""))
-                {
+                if (login.getText().equals("")) {
                     /*
-                    *   TODO:
-                    *    здесь прописывается проверка с бд логина
+                     *   TODO:
+                     *    здесь прописывается проверка с бд логина
                      */
                     return !super.isValid();
-                }
-                else
-                {
+                } else {
                     return super.isValid();
                 }
             }
@@ -90,12 +90,9 @@ public class AuthController implements Initializable {
 
             @Override
             public boolean isValid() {
-                if(password.getText().equals(""))
-                {
+                if (password.getPassword().equals("")) {
                     return !super.isValid();
-                }
-                else
-                {
+                } else {
                     return super.isValid();
                 }
             }
@@ -108,12 +105,9 @@ public class AuthController implements Initializable {
 
             @Override
             public boolean isValid() {
-                if(confirmPassword.getText().equals(password.getText()))
-                {
+                if (confirmPassword.getPassword().equals(password.getPassword())) {
                     return super.isValid();
-                }
-                else
-                {
+                } else {
                     return !super.isValid();
                 }
             }
@@ -126,31 +120,19 @@ public class AuthController implements Initializable {
             @Override
             public void handle(ActionEvent actionEvent) {
                 tempLogin = login.getText();
-                tempPassword = password.getText();
-                /*
-                MessageDigest digest = MessageDigest.getInstance("SHA-256");
-                byte[] hash = digest.digest(tempPassword.getBytes(StandardCharsets.UTF_8));
-                 */
-                /*
-                 *TODO:
-                 * проверка данных пользователя с базой данных
-                 */
-                if(loginValidator.isValid() && passwordValidator.isValid())
-                {
-                    if(tempLogin.equals("admin") && tempPassword.equals("1234"))
-                    {
-                        User user = new User(tempLogin, tempPassword, Role.ADMIN);
-                        Main.user = user;
-                        Stage stage = (Stage) authorize.getScene().getWindow();
-                        stage.hide();
+                tempPassword = password.getPassword();
+                if (loginValidator.isValid() && passwordValidator.isValid()) {
+                    try {
+                        DbWeather db = DbWeather.getInstance();
+                        User dbUser = db.getUser(tempLogin);
+                        if (dbUser.getPasswordHash().equals(DigestUtils.sha256Hex(tempPassword))) {
+                            Main.user = dbUser;
+                        }
+                    } catch (SQLException | ClassNotFoundException | IOException e) {
+                        e.printStackTrace();
                     }
-                    else
-                    {
-                        User user = new User(tempLogin, tempPassword, Role.USER);
-                        Main.user = user;
-                        Stage stage = (Stage) authorize.getScene().getWindow();
-                        stage.hide();
-                    }
+                    Stage stage = (Stage) authorize.getScene().getWindow();
+                    stage.hide();
                 }
             }
         });
@@ -161,7 +143,7 @@ public class AuthController implements Initializable {
                 try {
                     FXMLLoader regWindow = new FXMLLoader(getClass().getResource("/com/maitrog/views/RegWindow.fxml"));
                     Parent root1 = regWindow.load();
-                    Stage tempClose = (Stage)register.getScene().getWindow();
+                    Stage tempClose = (Stage) register.getScene().getWindow();
                     Stage tempMain = (Stage) tempClose.getOwner();
                     tempClose.close();
                     Stage regStage = new Stage();
@@ -176,7 +158,7 @@ public class AuthController implements Initializable {
                         }
                     });
                     regStage.show();
-                } catch(Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -188,7 +170,7 @@ public class AuthController implements Initializable {
                 try {
                     FXMLLoader regWindow = new FXMLLoader(getClass().getResource("/com/maitrog/views/AuthWindow.fxml"));
                     Parent root1 = regWindow.load();
-                    Stage tempClose = (Stage)register.getScene().getWindow();
+                    Stage tempClose = (Stage) register.getScene().getWindow();
                     Stage tempMain = (Stage) tempClose.getOwner();
                     tempClose.close();
                     Stage regStage = new Stage();
@@ -203,7 +185,7 @@ public class AuthController implements Initializable {
                         }
                     });
                     regStage.show();
-                } catch(Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -213,27 +195,18 @@ public class AuthController implements Initializable {
             @Override
             public void handle(ActionEvent actionEvent) {
                 tempLogin = login.getText();
-                tempPassword = password.getText();
-                /*
-                 *TODO:
-                 * ввод пользователя в базу данных
-                 */
-                if(loginValidator.isValid() && passwordValidator.isValid() && confirmValidator.isValid())
-                {
-                    if(tempLogin.equals("admin") && tempPassword.equals("1234"))
-                    {
-                        User user = new User(tempLogin, tempPassword, Role.ADMIN);
-                        Main.user = user;
-                        Stage stage = (Stage) registerFinal.getScene().getWindow();
-                        stage.hide();
+                tempPassword = password.getPassword();
+                if (loginValidator.isValid() && passwordValidator.isValid() && confirmValidator.isValid()) {
+                    try {
+                        DbWeather db = DbWeather.getInstance();
+                        db.addUser(new User(tempLogin, DigestUtils.sha256Hex(tempPassword), Role.USER));
+                    } catch (SQLException | ClassNotFoundException | IOException e) {
+                        e.printStackTrace();
                     }
-                    else
-                    {
-                        User user = new User(tempLogin, tempPassword, Role.USER);
-                        Main.user = user;
-                        Stage stage = (Stage) authorize.getScene().getWindow();
-                        stage.hide();
-                    }
+
+                    Stage stage = (Stage) authorize.getScene().getWindow();
+                    stage.hide();
+
                 }
             }
         });

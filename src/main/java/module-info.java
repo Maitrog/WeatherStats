@@ -8,6 +8,7 @@ module com.maitrog.weatherstats {
     requires java.sql;
     requires jackson.databind;
     requires com.microsoft.sqlserver.jdbc;
+    requires org.apache.commons.codec;
 
     requires jfreechart;
     requires MaterialFX;
