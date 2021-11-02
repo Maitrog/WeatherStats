@@ -57,7 +57,6 @@ public class UpdateDatabaseController implements Initializable {
                     lastCheckedCityId = 0;
                     Main.logger.log(Level.INFO, "Database was updated");
                 } catch (SQLException | ClassNotFoundException | IOException e) {
-//                Main.logger.log(Level.SEVERE, String.format("Update database was crashed. Exception: %s", e.getMessage()));
                     Main.logger.log(Level.SEVERE, "Update database was crashed. Exception: ", e.getMessage());
                     e.printStackTrace();
                 }

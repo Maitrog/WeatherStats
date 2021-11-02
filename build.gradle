@@ -49,6 +49,9 @@ dependencies {
     // https://mvnrepository.com/artifact/com.jfoenix/jfoenix
     implementation group: 'com.jfoenix', name: 'jfoenix', version: '9.0.10'
     implementation 'io.github.palexdev:materialfx:11.12.0'
+    // https://mvnrepository.com/artifact/commons-codec/commons-codec
+    implementation group: 'commons-codec', name: 'commons-codec', version: '1.15'
+
 
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
