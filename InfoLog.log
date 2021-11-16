@@ -1,0 +1,125 @@
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: java.specification.version - 16
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: javafx.runtime.version - 16+8
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: sun.cpu.isalist - amd64
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: sun.jnu.encoding - Cp1251
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: java.class.path - 
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: java.vm.vendor - Oracle Corporation
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: sun.arch.data.model - 64
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: user.variant - 
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: java.vendor.url - https://java.oracle.com/
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: user.timezone - GMT+03:00
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: java.vm.specification.version - 16
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: os.name - Windows 10
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: javafx.version - 16
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: sun.java.launcher - SUN_STANDARD
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: user.country - RU
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: sun.boot.library.path - D:\JDK\bin
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: sun.java.command - com.maitrog.weatherstats/com.maitrog.weatherstats.Main -Dfile.encoding=windows-1251 -Duser.country=RU -Duser.language=ru -Duser.variant --module com.maitrog.weatherstats/com.maitrog.weatherstats.Main
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: jdk.debug - release
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: sun.cpu.endian - little
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: user.home - C:\Users\igorb
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: user.language - ru
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: java.specification.vendor - Oracle Corporation
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: jdk.module.path - D:\GitHub\WeatherStats\build\libs\WeatherStats-1.0-SNAPSHOT.jar;C:\Users\igorb\.gradle\caches\modules-2\files-2.1\io.github.palexdev\materialfx\11.12.0\b00a7de5ff498909e86a7541a01bfb82249e7849\materialfx-11.12.0.jar;C:\Users\igorb\.gradle\caches\modules-2\files-2.1\org.jfree\jfreechart\1.5.0\bc7919249bac68c15c433ed51cb798a1bf8cd74e\jfreechart-1.5.0.jar;C:\Users\igorb\.gradle\caches\modules-2\files-2.1\org.controlsfx\controlsfx\11.1.0\4627258861ef68750b5fce11f8853d530cce6add\controlsfx-11.1.0.jar;C:\Users\igorb\.gradle\caches\modules-2\files-2.1\com.fasterxml.jackson.core\jackson-databind\2.0.1\1d160beb3f8924d5b98d03d94a149021146f71cc\jackson-databind-2.0.1.jar;C:\Users\igorb\.gradle\caches\modules-2\files-2.1\com.microsoft.sqlserver\mssql-jdbc\9.4.0.jre16\22f63f2fdb5a4ea3d311f1d1576a1f85a67f3c4f\mssql-jdbc-9.4.0.jre16.jar;C:\Users\igorb\.gradle\caches\modules-2\files-2.1\com.jfoenix\jfoenix\9.0.10\a7625792db8d15615ea6eebbc31e01504f20b2df\jfoenix-9.0.10.jar;C:\Users\igorb\.gradle\caches\modules-2\files-2.1\commons-codec\commons-codec\1.15\49d94806b6e3dc933dacbd8acb0fdbab8ebd1e5d\commons-codec-1.15.jar;C:\Users\igorb\.gradle\caches\modules-2\files-2.1\com.fasterxml.jackson.core\jackson-annotations\2.0.1\36e5996abe8655a6471b82af5ac1cd6786aecf85\jackson-annotations-2.0.1.jar;C:\Users\igorb\.gradle\caches\modules-2\files-2.1\com.fasterxml.jackson.core\jackson-core\2.0.1\481d14ec21e034ed45217c4854dbbf15940ce108\jackson-core-2.0.1.jar;C:\Users\igorb\.gradle\caches\modules-2\files-2.1\com.vanniktech\gradle-maven-publish-plugin\0.13.0\c8d375f00f2f866d50ab8fa7ac2491e9815048c9\gradle-maven-publish-plugin-0.13.0.jar;C:\Users\igorb\.gradle\caches\modules-2\files-2.1\org.reactfx\reactfx\2.0-M5\aa02bc40ebbb87a76d4b188516294612c8972b80\reactfx-2.0-M5.jar;C:\Users\igorb\.gradle\caches\modules-2\files-2.1\com.squareup.retrofit2\converter-moshi\2.7.1\591f0b864efb6da73a72208a2ea23a76b1513f23\converter-moshi-2.7.1.jar;C:\Users\igorb\.gradle\caches\modules-2\files-2.1\com.squareup.moshi\moshi\1.8.0\752e7b187599d3ccb174d00ba7235e29add736be\moshi-1.8.0.jar;C:\Users\igorb\.gradle\caches\modules-2\files-2.1\com.squareup.retrofit2\retrofit\2.7.1\ab61c867c73bdf57224bcc40525f42fea72960a0\retrofit-2.7.1.jar;C:\Users\igorb\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-stdlib\1.3.61\4702105e97f7396ae41b113fdbdc180ec1eb1e36\kotlin-stdlib-1.3.61.jar;C:\Users\igorb\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp3\okhttp\3.14.4\4f6f76315e70d9af39a1125dc6ff7145e26e3040\okhttp-3.14.4.jar;C:\Users\igorb\.gradle\caches\modules-2\files-2.1\com.squareup.okio\okio\1.17.2\78c7820b205002da4d2d137f6f312bd64b3d6049\okio-1.17.2.jar;C:\Users\igorb\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-stdlib-common\1.3.61\65abb71d5afb850b68be03987b08e2c864ca3110\kotlin-stdlib-common-1.3.61.jar;C:\Users\igorb\.gradle\caches\modules-2\files-2.1\org.jetbrains\annotations\13.0\919f0dfe192fb4e063e7dacadee7f8bb9a2672a9\annotations-13.0.jar;C:\Users\igorb\.gradle\caches\modules-2\files-2.1\org.openjfx\javafx-fxml\16\369f646fc29d2223cc98cfc3c059f2409b3e8fcb\javafx-fxml-16-win.jar;C:\Users\igorb\.gradle\caches\modules-2\files-2.1\org.openjfx\javafx-web\16\d2f80089a4ae1629a5ec14637abf4f6d70b96dab\javafx-web-16-win.jar;C:\Users\igorb\.gradle\caches\modules-2\files-2.1\org.openjfx\javafx-controls\16\65cdeae29c67d25932dcc66ca4f7d269923631ba\javafx-controls-16-win.jar;C:\Users\igorb\.gradle\caches\modules-2\files-2.1\org.openjfx\javafx-swing\16\a7fea813dbe22b235a6350f0ce419d72877236ae\javafx-swing-16-win.jar;C:\Users\igorb\.gradle\caches\modules-2\files-2.1\org.openjfx\javafx-media\16\6d776658906fc25051734bc6b03f214cc72c808e\javafx-media-16-win.jar;C:\Users\igorb\.gradle\caches\modules-2\files-2.1\org.openjfx\javafx-graphics\16\cd18f8477818b40cfdbcfec7e2fc15f632f0a2f\javafx-graphics-16-win.jar;C:\Users\igorb\.gradle\caches\modules-2\files-2.1\org.openjfx\javafx-base\16\e0564fea3f27dd3a10fa62e5005612333fc244bc\javafx-base-16-win.jar
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: java.version.date - 2021-07-20
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: java.home - D:\JDK
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: file.separator - \
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: java.vm.compressedOopsMode - Zero based
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: line.separator - 
+
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: java.vm.specification.vendor - Oracle Corporation
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: java.specification.name - Java Platform API Specification
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: jdk.module.main.class - com.maitrog.weatherstats.Main
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: jdk.module.main - com.maitrog.weatherstats
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: user.script - 
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: sun.management.compiler - HotSpot 64-Bit Tiered Compilers
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: java.runtime.version - 16.0.2+7-67
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: user.name - igorb
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: path.separator - ;
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: os.version - 10.0
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: java.runtime.name - Java(TM) SE Runtime Environment
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: file.encoding - Cp1251
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: java.vm.name - Java HotSpot(TM) 64-Bit Server VM
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: java.vendor.url.bug - https://bugreport.java.com/bugreport/
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: java.io.tmpdir - C:\Users\igorb\AppData\Local\Temp\
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: java.version - 16.0.2
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: user.dir - D:\GitHub\WeatherStats
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: os.arch - amd64
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: java.vm.specification.name - Java Virtual Machine Specification
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: sun.os.patch.level - 
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: java.library.path - D:\JDK\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\iCLS\;C:\Program Files\Intel\Intel(R) Management Engine Components\iCLS\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;D:\Program Files\runtime\win64;D:\Program Files (x86)\runtime\win64;D:\Program Files (x86)\bin;D:\Program Files (x86)\polyspace\bin;D:\Program Files\MATLAB\runtime\win64;D:\Program Files\MATLAB\bin;C:\Program Files\dotnet\;D:\Program Files\bin;D:\Program Files\polyspace\bin;C:\Program Files\Git\cmd;C:\Users\igorb\AppData\Local\Programs\Python\Python38-32\Scripts\;C:\Users\igorb\AppData\Local\Programs\Python\Python38-32\;C:\Users\igorb\AppData\Local\Microsoft\WindowsApps;C:\Users\igorb\.dotnet\tools;C:\Users\igorb\AppData\Local\atom\bin;C:\Users\igorb\AppData\Local\Microsoft\WindowsApps;C:\Users\igorb\AppData\Local\GitHubDesktop\bin;.
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: java.vm.info - mixed mode
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: java.vendor - Oracle Corporation
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: java.vm.version - 16.0.2+7-67
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: sun.io.unicode.encoding - UnicodeLittle
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: java.class.version - 60.0
+но€б. 16, 2021 2:10:15 PM com.maitrog.weatherstats.Main start
+INFO: Start loading main window
+но€б. 16, 2021 2:10:15 PM com.maitrog.controllers.MainController initialize
+INFO: Start initializing main window
+но€б. 16, 2021 2:10:15 PM com.maitrog.controllers.MainController initialize
+INFO:  Main window was initialized
+но€б. 16, 2021 2:10:15 PM com.maitrog.controllers.MainController loadScene
+INFO: Scene start loading
+но€б. 16, 2021 2:10:16 PM com.maitrog.controllers.MainController loadScene
+INFO: Scene was loaded
+но€б. 16, 2021 2:10:16 PM com.maitrog.weatherstats.Main start
+INFO: Main window was loaded
+но€б. 16, 2021 2:10:16 PM com.maitrog.weatherstats.Main start
+INFO: Start loading authentication window
+но€б. 16, 2021 2:10:16 PM com.maitrog.weatherstats.Main start
+INFO: Authentication window was loaded
