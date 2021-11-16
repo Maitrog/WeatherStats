@@ -43,6 +43,9 @@ public class MainController implements Initializable {
     private MFXButton settingsButton;
 
     @FXML
+    private MFXButton graphicsErrorButton;
+
+    @FXML
     private Text title;
 
     @FXML
@@ -71,6 +74,7 @@ public class MainController implements Initializable {
         graphicsButton.setAlignment(Pos.CENTER_LEFT);
         updateButton.setAlignment(Pos.CENTER_LEFT);
         settingsButton.setAlignment(Pos.CENTER_LEFT);
+        graphicsErrorButton.setAlignment(Pos.CENTER_LEFT);
         Thread open = new Thread(() -> {
             animTimer = new Timer();
             animTimer.schedule(task, 0, 16);
@@ -137,10 +141,16 @@ public class MainController implements Initializable {
         loadScene((Pane) parent, "/com/maitrog/views/UpdateDatabase.fxml");
     }
 
-    public  void graphics(ActionEvent event) throws IOException {
+    public void graphics(ActionEvent event) throws IOException {
         title.setText("Temperature charts");
         Parent parent = graphicsButton.getParent().getParent();
         loadScene((Pane) parent, "/com/maitrog/views/Graphics.fxml");
+    }
+
+    public void graphicsError(ActionEvent event) throws IOException {
+        title.setText("Temperature mistake charts");
+        Parent parent = graphicsErrorButton.getParent().getParent();
+        loadScene((Pane) parent, "/com/maitrog/views/GraphicsError.fxml");
     }
 
     private void loadScene(Pane pane, String s) throws IOException {
