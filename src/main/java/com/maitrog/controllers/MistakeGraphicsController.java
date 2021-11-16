@@ -18,7 +18,9 @@ import javafx.fxml.FXML;
 
 import javafx.fxml.Initializable;
 import javafx.fxml.LoadListener;
+import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 
 import java.io.IOException;
@@ -28,7 +30,13 @@ import java.util.*;
 public class MistakeGraphicsController implements Initializable {
 
     @FXML
-    private LineChart<String, Number> mistakeLineChart;
+    CategoryAxis xAxis = new CategoryAxis();
+
+    @FXML
+    NumberAxis yAxis = new NumberAxis();
+
+    @FXML
+    private LineChart<String, Number> mistakeLineChart = new LineChart<String, Number>(xAxis, yAxis);;
 
     @FXML
     private MFXComboBox<String> mistakeComboBox;
@@ -50,8 +58,6 @@ public class MistakeGraphicsController implements Initializable {
 
     private void addData() {
         if (mistakeDatePicker.getDate().isAfter(LocalDate.now())) return;
-        XYChart.Series<String, Number> series = new XYChart.Series();
-        List<Weather> targetDateWeather = new ArrayList<>();
         try {
             List<Weather> ramblerDateWeather;
             List<Weather> yandexDateWeather;
@@ -114,7 +120,6 @@ public class MistakeGraphicsController implements Initializable {
                     mistakeLineChart.getData().add(ramblerSeries);
                     ramblerSeries.setName("Rambler");
 
-
                     for (Weather weather : yandexDateWeather) {
                         yandexSeries.getData().add(new XYChart.Data<>(weather.getCheckedDate().toString(),
                                 Math.abs((weather.getMaxTemperature() - weather.getMinTemperature()) / 2
@@ -122,7 +127,6 @@ public class MistakeGraphicsController implements Initializable {
                     }
                     mistakeLineChart.getData().add(yandexSeries);
                     yandexSeries.setName("Yandex");
-
 
                     for (Weather weather : worldDateWeather) {
                         worldSeries.getData().add(new XYChart.Data<>(weather.getCheckedDate().toString(),
