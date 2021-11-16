@@ -12,6 +12,9 @@ import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import io.github.palexdev.materialfx.validation.base.AbstractMFXValidator;
 import io.github.palexdev.materialfx.validation.base.Validated;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.beans.property.BooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -34,10 +37,13 @@ import java.sql.SQLException;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.function.Supplier;
+import java.util.logging.Level;
 
 public class AuthController implements Initializable {
     private String tempLogin;
     private String tempPassword;
+    private boolean authorized = false;
+    private boolean registered = false;
 
     @FXML
     private MFXTextField login;
@@ -71,7 +77,7 @@ public class AuthController implements Initializable {
 
             @Override
             public boolean isValid() {
-                if (login.getText().equals("")) {
+                if (login.getText().equals("") || login.getText().length() < 4) {
                     /*
                      *   TODO:
                      *    здесь прописывается проверка с бд логина
@@ -90,7 +96,7 @@ public class AuthController implements Initializable {
 
             @Override
             public boolean isValid() {
-                if (password.getPassword().equals("")) {
+                if (password.getPassword().equals("") || password.getPassword().length() < 4) {
                     return !super.isValid();
                 } else {
                     return super.isValid();
@@ -121,16 +127,35 @@ public class AuthController implements Initializable {
             public void handle(ActionEvent actionEvent) {
                 tempLogin = login.getText();
                 tempPassword = password.getPassword();
-                if (loginValidator.isValid() && passwordValidator.isValid()) {
-                    try {
-                        DbWeather db = DbWeather.getInstance();
-                        User dbUser = db.getUser(tempLogin);
-                        if (dbUser.getPasswordHash().equals(DigestUtils.sha256Hex(tempPassword))) {
-                            Main.user = dbUser;
+                Main.logger.log(Level.INFO, "Button worked");
+                Thread authThread = new Thread(() -> {
+                    if (loginValidator.isValid() && passwordValidator.isValid()) {
+                        try {
+                            DbWeather db = DbWeather.getInstance();
+                            User dbUser = db.getUser(tempLogin);
+                            if (dbUser.getPasswordHash().equals(DigestUtils.sha256Hex(tempPassword))) {
+                                Main.user = dbUser;
+                                authorized = true;
+                            } else {
+                                authorized = false;
+                                throw new IOException("Неверный пароль");
+                            }
+                            Main.logger.log(Level.INFO, "Authorized");
+                        } catch (SQLException | ClassNotFoundException | IOException e) {
+                            e.printStackTrace();
+                            passwordValidator.setValidatorMessage("Неправильный пароль");
                         }
-                    } catch (SQLException | ClassNotFoundException | IOException e) {
-                        e.printStackTrace();
+
+                        Main.logger.log(Level.INFO, "Authorization hidden");
                     }
+                });
+                authThread.start();
+                try {
+                    authThread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if(authorized){
                     Stage stage = (Stage) authorize.getScene().getWindow();
                     stage.hide();
                 }
@@ -196,17 +221,31 @@ public class AuthController implements Initializable {
             public void handle(ActionEvent actionEvent) {
                 tempLogin = login.getText();
                 tempPassword = password.getPassword();
-                if (loginValidator.isValid() && passwordValidator.isValid() && confirmValidator.isValid()) {
-                    try {
-                        DbWeather db = DbWeather.getInstance();
-                        db.addUser(new User(tempLogin, DigestUtils.sha256Hex(tempPassword), Role.USER));
-                    } catch (SQLException | ClassNotFoundException | IOException e) {
-                        e.printStackTrace();
+                Main.logger.log(Level.INFO, "Button worked");
+                Thread regThread = new Thread(() -> {
+                    if (loginValidator.isValid() && passwordValidator.isValid() && confirmValidator.isValid()) {
+                        try {
+                            DbWeather db = DbWeather.getInstance();
+                            db.addUser(new User(tempLogin, DigestUtils.sha256Hex(tempPassword), Role.USER));
+                            registered = true;
+                            Main.logger.log(Level.INFO, "Added user to DB");
+                        } catch (SQLException | ClassNotFoundException | IOException e) {
+                            registered = false;
+                            e.printStackTrace();
+                        }
+                        Main.logger.log(Level.INFO, "Registered");
                     }
-
+                });
+                regThread.start();
+                try {
+                    regThread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if(registered){
                     Stage stage = (Stage) authorize.getScene().getWindow();
                     stage.hide();
-
+                    Main.logger.log(Level.INFO, "Stage hidden");
                 }
             }
         });
