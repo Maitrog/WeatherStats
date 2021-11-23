@@ -40,6 +40,9 @@ public class MainController implements Initializable {
     private MFXButton graphicsButton;
 
     @FXML
+    private  MFXButton siteAccuracy;
+
+    @FXML
     private MFXButton settingsButton;
 
     @FXML
@@ -141,6 +144,12 @@ public class MainController implements Initializable {
         title.setText("Temperature charts");
         Parent parent = graphicsButton.getParent().getParent();
         loadScene((Pane) parent, "/com/maitrog/views/Graphics.fxml");
+    }
+
+    public  void siteAccuracy(ActionEvent event) throws IOException {
+        title.setText("Site Accuracy");
+        Parent parent = siteAccuracy.getParent().getParent();
+        loadScene((Pane) parent, "/com/maitrog/views/SiteAccuracy.fxml");
     }
 
     private void loadScene(Pane pane, String s) throws IOException {

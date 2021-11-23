@@ -105,20 +105,66 @@ public class DbWeather {
     }
 
     public List<Weather> getWeathers(String name, SiteType siteType, Date targetDate) {
-        SimpleDateFormat sdf = new SimpleDateFormat(
-                "dd.MM.yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
         try (Statement statement = connection.createStatement()) {
             ResultSet weatherResult = statement.executeQuery(String.format("SELECT Weather.Id, CheckedDate, TargetDate, MinTemperature, MaxTemperature, Pressure, Humidity, SiteType, CityId " +
                             "FROM Weather " +
                             "JOIN Cities ON Cities.Id = Weather.CityId " +
                             "WHERE (Cities.NameRu = '%s' OR Cities.NameEn = '%s') AND SiteType = %d AND TargetDate = '%s'" +
                             "ORDER BY(CheckedDate)",
-                            name, name, SiteType.getValue(siteType), sdf.format(targetDate)));
+                    name, name, SiteType.getValue(siteType), sdf.format(targetDate)));
             return parseWeatherResponse(weatherResult);
         } catch (SQLException throwables) {
             Main.logger.log(Level.SEVERE, throwables.getMessage());
             throwables.printStackTrace();
             return Collections.emptyList();
+        }
+    }
+
+    public List<Date> getTargetDate(int cityId, Date lastTargetDate) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        try (Statement statement = connection.createStatement()) {
+            ResultSet dateResult = statement.executeQuery(String.format("SELECT DISTINCT TargetDate " +
+                            "FROM Weather " +
+                            "WHERE CityId = '%d' AND TargetDate < '%s'" +
+                            "ORDER BY(TargetDate)",
+                    cityId, sdf.format(lastTargetDate)));
+            List<Date> dates = new ArrayList<>();
+            while (dateResult.next()) {
+                dates.add(dateResult.getDate("TargetDate"));
+            }
+            return dates;
+        } catch (SQLException throwables) {
+            Main.logger.log(Level.SEVERE, throwables.getMessage());
+            throwables.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+    public double getAvgTemperature(int cityId, Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        try (Statement statement = connection.createStatement()) {
+            ResultSet avgTempResult = statement.executeQuery(String.format("WITH allTemp as ((SELECT MinTemperature as Temperature\n" +
+                            "FROM Weather\n" +
+                            "WHERE CityId = %d AND TargetDate = '%s' AND CheckedDate = '%s')\n" +
+                            "UNION ALL\n" +
+                            "(SELECT MaxTemperature as Temperature\n" +
+                            "FROM Weather\n" +
+                            "Where CityId = %d AND TargetDate = '%s' AND CheckedDate = '%s'))\n" +
+                            "\n" +
+                            "SELECT AVG(Cast(Temperature as Float)) as avgTemp\n" +
+                            "FROM allTemp",
+                    cityId, sdf.format(date), sdf.format(date), cityId, sdf.format(date), sdf.format(date)));
+
+            double avgTemp = -9999;
+            while (avgTempResult.next()) {
+                avgTemp = avgTempResult.getDouble("avgTemp");
+            }
+            return avgTemp;
+        } catch (SQLException throwables) {
+            Main.logger.log(Level.SEVERE, throwables.getMessage());
+            throwables.printStackTrace();
+            return -9999;
         }
     }
 
@@ -176,12 +222,11 @@ public class DbWeather {
         return weathers;
     }
 
-    public User getUser(String login)
-    {
+    public User getUser(String login) {
         try (Statement statement = connection.createStatement()) {
             ResultSet userResult = statement.executeQuery(String.format("SELECT * FROM Users WHERE Login = '%s'", login));
             User user = new User();
-            while (userResult.next()){
+            while (userResult.next()) {
                 user.setLogin(userResult.getString("Login"));
                 user.setPasswordHash(userResult.getString("PasswordHash"));
                 user.setRole(Role.values()[userResult.getInt("RoleId")]);
@@ -194,7 +239,7 @@ public class DbWeather {
         }
     }
 
-    public void addUser(User user){
+    public void addUser(User user) {
         try (PreparedStatement statement = connection.prepareStatement(
                 "INSERT INTO Users(Login, PasswordHash, RoleId) " +
                         "VALUES (?, ?, ?)")) {
