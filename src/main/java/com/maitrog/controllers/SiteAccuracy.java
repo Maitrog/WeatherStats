@@ -20,6 +20,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
+import java.util.stream.IntStream;
 
 public class SiteAccuracy implements Initializable {
 
@@ -69,6 +70,7 @@ public class SiteAccuracy implements Initializable {
         List<Future> futures = new ArrayList<>();
         List<City> cities = atomicCities.get();
         ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+//        long startTime = System.currentTimeMillis();
         try {
             for (City city : cities) {
                 futures.add(service.submit(new Callable<Void>() {
@@ -76,22 +78,20 @@ public class SiteAccuracy implements Initializable {
                     public Void call() {
                         try {
                             long startTime = System.currentTimeMillis();
-                            double[] sumAvgTemp = new double[30];
-                            int[] countAvgTemp = new int[30];
-                            List<Date> dates = DbWeather.getInstance().getTargetDate(city.getId(), new Date(System.currentTimeMillis()));
-                            for (Date date : dates) {
+                            List<Double> realAvgTemp = DbWeather.getInstance().getAllAvgTemperature(city.getId());
+                            List<List<Weather>> sortedWeather = DbWeather.getInstance().getSortedWeathers(city.getId(), siteType);
+                            int datesSize = sortedWeather.size();
+                            double[] sumAvgTemp = new double[31];
+                            int[] countAvgTemp = new int[31];
+                            for (int i = 0; i < datesSize; i++) {
 
-                                List<Weather> yandexWeather = DbWeather.getInstance().getWeathers(city.getNameRu(), siteType, date);
-                                double realAvgTemp = DbWeather.getInstance().getAvgTemperature(city.getId(), date);
-
-                                if (realAvgTemp != -9999) {
-                                    for (Weather weather : yandexWeather) {
-                                        long day = (weather.getTargetDate().getTime() - weather.getCheckedDate().getTime()) / 1000 / 60 / 60 / 24;
-                                        double avgTemp = (weather.getMaxTemperature() - weather.getMinTemperature()) / 2.0 + weather.getMinTemperature();
-                                        double mistake = Math.abs(realAvgTemp - avgTemp);
-                                        sumAvgTemp[(int) day] += mistake;
-                                        countAvgTemp[(int) day]++;
-                                    }
+                                List<Weather> weathers = sortedWeather.get(i);
+                                for (Weather weather : weathers) {
+                                    long day = (weather.getTargetDate().getTime() - weather.getCheckedDate().getTime()) / 1000 / 60 / 60 / 24;
+                                    double avgTemp = (weather.getMaxTemperature() - weather.getMinTemperature()) / 2.0 + weather.getMinTemperature();
+                                    double mistake = Math.abs(realAvgTemp.get(i) - avgTemp);
+                                    sumAvgTemp[(int) day] += mistake;
+                                    countAvgTemp[(int) day]++;
                                 }
                             }
                             allSumAvgTemperatures.add(sumAvgTemp);
@@ -100,7 +100,8 @@ public class SiteAccuracy implements Initializable {
                             long endTime = System.currentTimeMillis();
                             Main.logger.log(Level.INFO, "Total execution time: " + (endTime - startTime) + "ms");
                         } catch (SQLException | ClassNotFoundException | IOException e) {
-                            e.printStackTrace();
+                            Main.logger.log(Level.SEVERE, e.getMessage());
+//                            e.printStackTrace();
                         }
                         return null;
                     }
@@ -115,6 +116,8 @@ public class SiteAccuracy implements Initializable {
         for (Future future : futures) {
             future.get();
         }
+//        long endTime = System.currentTimeMillis();
+//        Main.logger.log(Level.INFO, "Total execution time: " + (endTime - startTime) + "ms");
 
         int[] totalCountAvg = new int[30];
         double[] totalSumAvgTemp = new double[30];
@@ -126,13 +129,9 @@ public class SiteAccuracy implements Initializable {
         }
 
         double[] totalAvgTemperature = new double[30];
-        for (int i = 0; i < totalCountAvg.length; i++) {
-            totalAvgTemperature[i] = totalSumAvgTemp[i] / totalCountAvg[i];
-        }
+        IntStream.range(0, totalCountAvg.length).forEach(i -> totalAvgTemperature[i] = totalSumAvgTemp[i] / totalCountAvg[i]);
 
-        for (int i = 0; i < 30; i++) {
-            series.getData().add(new XYChart.Data<>(String.valueOf(i), totalAvgTemperature[i]));
-        }
+        IntStream.range(0, 15).forEach(i -> series.getData().add(new XYChart.Data<>(String.valueOf(i), totalAvgTemperature[i])));
         lineChart.getData().add(series);
 
     }
