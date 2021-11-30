@@ -14,17 +14,17 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maitrog.controllers.MistakeGraphicsController">
    <children>
-      <LineChart fx:id="mistakeLineChart" layoutX="23.0" layoutY="54.0" prefHeight="313.0" prefWidth="540.0" title="Temperature Mistake Chart" AnchorPane.bottomAnchor="51.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="51.0">
+      <LineChart fx:id="mistakeLineChart" layoutX="23.0" layoutY="54.0" prefHeight="313.0" prefWidth="540.0" title="Отклонение от среднего" AnchorPane.bottomAnchor="51.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="51.0">
         <xAxis>
-          <CategoryAxis animated="false" label="Check date" prefHeight="77.0" prefWidth="492.0" side="BOTTOM" fx:id="xAxis" />
+          <CategoryAxis animated="false" label="Дата проверки" prefHeight="77.0" prefWidth="492.0" side="BOTTOM" fx:id="xAxis" />
         </xAxis>
         <yAxis>
-          <NumberAxis fx:id="yAxis" label="Temperature mistake" side="LEFT" />
+          <NumberAxis fx:id="yAxis" label="Дельта температур" side="LEFT" />
         </yAxis>
       </LineChart>
       <HBox alignment="TOP_CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="31.0" prefWidth="600.0" spacing="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
          <children>
-            <MFXComboBox fx:id="mistakeComboBox" lineStrokeWidth="2.0" prefHeight="31.0" prefWidth="150.0" promptText="Select" unfocusedLineColor="#9454f0b2">
+            <MFXComboBox fx:id="mistakeComboBox" lineStrokeWidth="2.0" prefHeight="31.0" prefWidth="150.0" promptText="Выбрать" unfocusedLineColor="#9454f0b2">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
@@ -38,7 +38,7 @@
       </HBox>
       <VBox alignment="CENTER" layoutY="369.0" prefHeight="31.0" prefWidth="600.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <MFXButton fx:id="plotMistakeChartButton" alignment="CENTER" depthLevel="LEVEL1" maxWidth="150.0" minWidth="150.0" onAction="#plotMistakeChart" prefHeight="31.0" prefWidth="150.0" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Load Mistake chart" textAlignment="CENTER" />
+            <MFXButton fx:id="plotMistakeChartButton" alignment="CENTER" depthLevel="LEVEL1" maxWidth="150.0" minWidth="150.0" onAction="#plotMistakeChart" prefHeight="31.0" prefWidth="150.0" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Построить график" textAlignment="CENTER" />
          </children>
       </VBox>
    </children>
