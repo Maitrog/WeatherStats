@@ -50,6 +50,10 @@ public class MistakeGraphicsController implements Initializable {
         addData();
     }
 
+    private void fixRequest(List<Weather> weather) {
+        while (weather.size() >= 15) weather.remove(0);
+    }
+
     private void addData() {
         if (mistakeDatePicker.getDate().isAfter(LocalDate.now())) return;
         Thread plot = new Thread(() -> {
@@ -60,6 +64,10 @@ public class MistakeGraphicsController implements Initializable {
                 List<Weather> ramblerDateWeather = getWeathers(SiteType.Rambler);
                 List<Weather> yandexDateWeather = getWeathers(SiteType.Yandex);
                 List<Weather> worldDateWeather = getWeathers(SiteType.WorldWeather);
+              
+                fixRequest(ramblerDateWeather);
+                fixRequest(yandexDateWeather);
+                fixRequest(worldDateWeather);
 
                 Weather ramblerWeather = ramblerDateWeather.get(ramblerDateWeather.size() - 1);
                 Weather yandexWeather = yandexDateWeather.get(yandexDateWeather.size() - 1);
