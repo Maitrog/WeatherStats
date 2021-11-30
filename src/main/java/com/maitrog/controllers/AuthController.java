@@ -1,8 +1,5 @@
 package com.maitrog.controllers;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXTextArea;
-import com.jfoenix.validation.RequiredFieldValidator;
 import com.maitrog.models.DbWeather;
 import com.maitrog.models.Role;
 import com.maitrog.models.User;
@@ -11,32 +8,22 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import io.github.palexdev.materialfx.validation.base.AbstractMFXValidator;
-import io.github.palexdev.materialfx.validation.base.Validated;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
-import javafx.beans.property.BooleanProperty;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.sql.SQLException;
-import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.function.Supplier;
 import java.util.logging.Level;
 
 public class AuthController implements Initializable {
@@ -122,44 +109,39 @@ public class AuthController implements Initializable {
         passwordValidator.setValidatorMessage("Введите пароль");
         confirmValidator.setValidatorMessage("Пароли не совпадают");
 
-        authorize.setOnAction(new EventHandler<>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                tempLogin = login.getText();
-                tempPassword = password.getPassword();
-                Main.logger.log(Level.INFO, "Button worked");
-                Thread authThread = new Thread(() -> {
-                    if (loginValidator.isValid() && passwordValidator.isValid()) {
-                        try {
-                            DbWeather db = DbWeather.getInstance();
-                            User dbUser = db.getUser(tempLogin);
-                            if (dbUser.getPasswordHash().equals(DigestUtils.sha256Hex(tempPassword))) {
-                                Main.user = dbUser;
-                                authorized = true;
-                            } else {
-                                authorized = false;
-                                throw new IOException("Неверный пароль");
-                            }
-                            Main.logger.log(Level.INFO, "Authorized");
-                        } catch (SQLException | ClassNotFoundException | IOException e) {
-                            e.printStackTrace();
-                            passwordValidator.setValidatorMessage("Неправильный пароль");
+        authorize.setOnAction(actionEvent -> {
+            tempLogin = login.getText();
+            tempPassword = password.getPassword();
+            Main.logger.log(Level.INFO, "Button worked");
+            Thread authThread = new Thread(() -> {
+                if (loginValidator.isValid() && passwordValidator.isValid()) {
+                    try {
+                        DbWeather db = DbWeather.getInstance();
+                        User dbUser = db.getUser(tempLogin);
+                        if (dbUser.getPasswordHash().equals(DigestUtils.sha256Hex(tempPassword))) {
+                            Main.user = dbUser;
+                            authorized = true;
+                        } else {
+                            authorized = false;
+                            throw new IOException("Неверный пароль");
                         }
+                        Main.logger.log(Level.INFO, "Authorized");
+                    } catch (SQLException | ClassNotFoundException | IOException e) {
+                        e.printStackTrace();
+                        passwordValidator.setValidatorMessage("Неправильный пароль");
+                    }
 
+                }
+                Platform.runLater(() -> {
+                    if (authorized) {
+                        Stage stage = (Stage) authorize.getScene().getWindow();
+                        stage.hide();
                         Main.logger.log(Level.INFO, "Authorization hidden");
                     }
                 });
-                authThread.start();
-                try {
-                    authThread.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if(authorized){
-                    Stage stage = (Stage) authorize.getScene().getWindow();
-                    stage.hide();
-                }
-            }
+            });
+            authThread.setDaemon(true);
+            authThread.start();
         });
 
         register.setOnAction(new EventHandler<>() {
@@ -176,12 +158,7 @@ public class AuthController implements Initializable {
                     regStage.setResizable(false);
                     regStage.initModality(Modality.APPLICATION_MODAL);
                     regStage.initOwner(tempClose.getOwner());
-                    regStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                        @Override
-                        public void handle(WindowEvent event) {
-                            tempMain.close();
-                        }
-                    });
+                    regStage.setOnCloseRequest(event -> tempMain.close());
                     regStage.show();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -203,12 +180,7 @@ public class AuthController implements Initializable {
                     regStage.setResizable(false);
                     regStage.initModality(Modality.APPLICATION_MODAL);
                     regStage.initOwner(tempClose.getOwner());
-                    regStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                        @Override
-                        public void handle(WindowEvent event) {
-                            tempMain.close();
-                        }
-                    });
+                    regStage.setOnCloseRequest(event -> tempMain.close());
                     regStage.show();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -216,38 +188,33 @@ public class AuthController implements Initializable {
             }
         });
 
-        registerFinal.setOnAction(new EventHandler<>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                tempLogin = login.getText();
-                tempPassword = password.getPassword();
-                Main.logger.log(Level.INFO, "Button worked");
-                Thread regThread = new Thread(() -> {
-                    if (loginValidator.isValid() && passwordValidator.isValid() && confirmValidator.isValid()) {
-                        try {
-                            DbWeather db = DbWeather.getInstance();
-                            db.addUser(new User(tempLogin, DigestUtils.sha256Hex(tempPassword), Role.USER));
-                            registered = true;
-                            Main.logger.log(Level.INFO, "Added user to DB");
-                        } catch (SQLException | ClassNotFoundException | IOException e) {
-                            registered = false;
-                            e.printStackTrace();
-                        }
-                        Main.logger.log(Level.INFO, "Registered");
+        registerFinal.setOnAction(actionEvent -> {
+            tempLogin = login.getText();
+            tempPassword = password.getPassword();
+            Main.logger.log(Level.INFO, "Button worked");
+            Thread regThread = new Thread(() -> {
+                if (loginValidator.isValid() && passwordValidator.isValid() && confirmValidator.isValid()) {
+                    try {
+                        DbWeather db = DbWeather.getInstance();
+                        db.addUser(new User(tempLogin, DigestUtils.sha256Hex(tempPassword), Role.USER));
+                        registered = true;
+                        Main.logger.log(Level.INFO, "Added user to DB");
+                    } catch (SQLException | ClassNotFoundException | IOException e) {
+                        registered = false;
+                        e.printStackTrace();
+                    }
+                    Main.logger.log(Level.INFO, "Registered");
+                }
+                Platform.runLater(() -> {
+                    if (registered) {
+                        Stage stage = (Stage) authorize.getScene().getWindow();
+                        stage.hide();
+                        Main.logger.log(Level.INFO, "Stage hidden");
                     }
                 });
-                regThread.start();
-                try {
-                    regThread.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if(registered){
-                    Stage stage = (Stage) authorize.getScene().getWindow();
-                    stage.hide();
-                    Main.logger.log(Level.INFO, "Stage hidden");
-                }
-            }
+            });
+            regThread.setDaemon(true);
+            regThread.start();
         });
     }
 }

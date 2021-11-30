@@ -1,31 +1,28 @@
 package com.maitrog.controllers;
 
-import com.maitrog.models.*;
-
-import java.net.URL;
-import java.sql.Date;
-import java.time.LocalDate;
-import java.util.ResourceBundle;
-
-import io.github.palexdev.materialfx.controls.MFXButton;
+import com.maitrog.models.DbWeather;
+import com.maitrog.models.SiteType;
+import com.maitrog.models.Weather;
+import com.maitrog.weatherstats.Main;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXTextField;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
-
 import javafx.fxml.Initializable;
-import javafx.fxml.LoadListener;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 
 import java.io.IOException;
+import java.net.URL;
+import java.sql.Date;
 import java.sql.SQLException;
-import java.util.*;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 public class MistakeGraphicsController implements Initializable {
 
@@ -36,7 +33,7 @@ public class MistakeGraphicsController implements Initializable {
     NumberAxis yAxis = new NumberAxis();
 
     @FXML
-    private LineChart<String, Number> mistakeLineChart = new LineChart<String, Number>(xAxis, yAxis);;
+    private LineChart<String, Number> mistakeLineChart = new LineChart<>(xAxis, yAxis);
 
     @FXML
     private MFXComboBox<String> mistakeComboBox;
@@ -48,10 +45,7 @@ public class MistakeGraphicsController implements Initializable {
     private MFXDatePicker mistakeDatePicker;
 
     @FXML
-    private MFXButton plotMistakeChartButton;
-
-    @FXML
-    private void plotMistakeChart(ActionEvent e) {
+    private void plotMistakeChart() {
         mistakeLineChart.getData().clear();
         addData();
     }
@@ -62,92 +56,84 @@ public class MistakeGraphicsController implements Initializable {
 
     private void addData() {
         if (mistakeDatePicker.getDate().isAfter(LocalDate.now())) return;
-        try {
-            List<Weather> ramblerDateWeather;
-            List<Weather> yandexDateWeather;
-            List<Weather> worldDateWeather;
-            XYChart.Series<String, Number> ramblerSeries = new XYChart.Series();
-            XYChart.Series<String, Number> yandexSeries = new XYChart.Series();
-            XYChart.Series<String, Number> worldSeries = new XYChart.Series();
-            ramblerDateWeather = DbWeather.getInstance().getWeathers(mistakeTextField.getText(), SiteType.Rambler,
-                    Date.valueOf(mistakeDatePicker.getDate()));
-            yandexDateWeather = DbWeather.getInstance().getWeathers(mistakeTextField.getText(), SiteType.Yandex,
-                    Date.valueOf(mistakeDatePicker.getDate()));
-            worldDateWeather = DbWeather.getInstance().getWeathers(mistakeTextField.getText(), SiteType.WorldWeather,
-                    Date.valueOf(mistakeDatePicker.getDate()));
+        Thread plot = new Thread(() -> {
+            try {
+                XYChart.Series<String, Number> ramblerSeries = new XYChart.Series<>();
+                XYChart.Series<String, Number> yandexSeries = new XYChart.Series<>();
+                XYChart.Series<String, Number> worldSeries = new XYChart.Series<>();
+                List<Weather> ramblerDateWeather = getWeathers(SiteType.Rambler);
+                List<Weather> yandexDateWeather = getWeathers(SiteType.Yandex);
+                List<Weather> worldDateWeather = getWeathers(SiteType.WorldWeather);
+              
+                fixRequest(ramblerDateWeather);
+                fixRequest(yandexDateWeather);
+                fixRequest(worldDateWeather);
 
-            fixRequest(ramblerDateWeather);
-            fixRequest(yandexDateWeather);
-            fixRequest(worldDateWeather);
+                Weather ramblerWeather = ramblerDateWeather.get(ramblerDateWeather.size() - 1);
+                Weather yandexWeather = yandexDateWeather.get(yandexDateWeather.size() - 1);
+                Weather worldWeather = worldDateWeather.get(worldDateWeather.size() - 1);
+                double ramblerTemp = (ramblerWeather.getMaxTemperature() - ramblerWeather.getMinTemperature()) / 2.0
+                        + ramblerWeather.getMinTemperature();
+                double yandexTemp = (yandexWeather.getMaxTemperature() - yandexWeather.getMinTemperature()) / 2.0
+                        + yandexWeather.getMinTemperature();
+                double worldTemp = (worldWeather.getMaxTemperature() - worldWeather.getMinTemperature()) / 2.0
+                        + worldWeather.getMinTemperature();
+                double currentWeather = (ramblerTemp + yandexTemp + worldTemp) / 3;
 
-            Weather ramblerWeather = ramblerDateWeather.get(ramblerDateWeather.size() - 1);
-            Weather yandexWeather = yandexDateWeather.get(yandexDateWeather.size() - 1);
-            Weather worldWeather = worldDateWeather.get(worldDateWeather.size() - 1);
-            double ramblerTemp = (ramblerWeather.getMaxTemperature() - ramblerWeather.getMinTemperature()) / 2
-                    + ramblerWeather.getMinTemperature();
-            double yandexTemp = (yandexWeather.getMaxTemperature() - yandexWeather.getMinTemperature()) / 2
-                    + yandexWeather.getMinTemperature();;
-            double worldTemp = (worldWeather.getMaxTemperature() - worldWeather.getMinTemperature()) / 2
-                    + worldWeather.getMinTemperature();
-            double currentWeather = (ramblerTemp + yandexTemp + worldTemp) / 3;
+                Platform.runLater(() -> {
+                    switch (mistakeComboBox.getSelectedValue()) {
+                        case "Rambler" -> {
+                            AddData(ramblerDateWeather, ramblerSeries, currentWeather);
+                            mistakeLineChart.getData().add(ramblerSeries);
+                            ramblerSeries.setName("Rambler");
+                        }
+                        case "Yandex" -> {
+                            AddData(yandexDateWeather, yandexSeries, currentWeather);
+                            mistakeLineChart.getData().add(yandexSeries);
+                            yandexSeries.setName("Yandex");
+                        }
+                        case "WorldWeather" -> {
+                            AddData(worldDateWeather, worldSeries, currentWeather);
+                            mistakeLineChart.getData().add(worldSeries);
+                            worldSeries.setName("WorldWeather");
+                        }
+                        default -> {
+                            AddData(ramblerDateWeather, ramblerSeries, currentWeather);
+                            mistakeLineChart.getData().add(ramblerSeries);
+                            ramblerSeries.setName("Rambler");
 
-            switch (mistakeComboBox.getSelectedValue()) {
-                case "Rambler" -> {
-                    for (Weather weather : ramblerDateWeather) {
-                        ramblerSeries.getData().add(new XYChart.Data<>(weather.getCheckedDate().toString(),
-                                Math.abs((weather.getMaxTemperature() - weather.getMinTemperature()) / 2
-                                        + weather.getMinTemperature() - currentWeather)));
-                    }
-                    mistakeLineChart.getData().add(ramblerSeries);
-                    ramblerSeries.setName("Rambler");
-                }
-                case "Yandex" -> {
-                    for (Weather weather : yandexDateWeather) {
-                        yandexSeries.getData().add(new XYChart.Data<>(weather.getCheckedDate().toString(),
-                                Math.abs((weather.getMaxTemperature() - weather.getMinTemperature()) / 2
-                                        + weather.getMinTemperature() - currentWeather)));
-                    }
-                    mistakeLineChart.getData().add(yandexSeries);
-                    yandexSeries.setName("Yandex");
-                }
-                case "WorldWeather" -> {
-                    for (Weather weather : worldDateWeather) {
-                        worldSeries.getData().add(new XYChart.Data<>(weather.getCheckedDate().toString(),
-                                Math.abs((weather.getMaxTemperature() - weather.getMinTemperature()) / 2
-                                        + weather.getMinTemperature() - currentWeather)));
-                    }
-                    mistakeLineChart.getData().add(worldSeries);
-                    worldSeries.setName("WorldWeather");
-                }
-                default -> {
-                    for (Weather weather : ramblerDateWeather) {
-                        ramblerSeries.getData().add(new XYChart.Data<>(weather.getCheckedDate().toString(),
-                                Math.abs((weather.getMaxTemperature() - weather.getMinTemperature()) / 2
-                                        + weather.getMinTemperature() - currentWeather)));
-                    }
-                    mistakeLineChart.getData().add(ramblerSeries);
-                    ramblerSeries.setName("Rambler");
+                            AddData(yandexDateWeather, yandexSeries, currentWeather);
+                            mistakeLineChart.getData().add(yandexSeries);
+                            yandexSeries.setName("Yandex");
 
-                    for (Weather weather : yandexDateWeather) {
-                        yandexSeries.getData().add(new XYChart.Data<>(weather.getCheckedDate().toString(),
-                                Math.abs((weather.getMaxTemperature() - weather.getMinTemperature()) / 2
-                                        + weather.getMinTemperature() - currentWeather)));
+                            AddData(worldDateWeather, worldSeries, currentWeather);
+                            mistakeLineChart.getData().add(worldSeries);
+                            worldSeries.setName("WorldWeather");
+                        }
                     }
-                    mistakeLineChart.getData().add(yandexSeries);
-                    yandexSeries.setName("Yandex");
-
-                    for (Weather weather : worldDateWeather) {
-                        worldSeries.getData().add(new XYChart.Data<>(weather.getCheckedDate().toString(),
-                                Math.abs((weather.getMaxTemperature() - weather.getMinTemperature()) / 2
-                                        + weather.getMinTemperature() - currentWeather)));
-                    }
-                    mistakeLineChart.getData().add(worldSeries);
-                    worldSeries.setName("WorldWeather");
-                }
+                });
+            } catch (SQLException | ClassNotFoundException |
+                    IOException e) {
+                Main.logger.log(Level.SEVERE, e.getMessage());
             }
-        } catch (SQLException | ClassNotFoundException | IOException e) {
-                e.printStackTrace();
-            }
+        });
+        plot.setDaemon(true);
+        plot.start();
+    }
+
+    private List<Weather> getWeathers(SiteType rambler) throws SQLException, ClassNotFoundException, IOException {
+        List<Weather> ramblerDateWeather;
+        ramblerDateWeather = DbWeather.getInstance().getWeathers(mistakeTextField.getText(), rambler,
+                Date.valueOf(mistakeDatePicker.getDate()));
+        return ramblerDateWeather;
+    }
+
+    private void AddData(List<Weather> ramblerDateWeather, XYChart.Series<String, Number> ramblerSeries, double currentWeather) {
+        for (Weather weather : ramblerDateWeather) {
+            ramblerSeries.getData().add(new XYChart.Data<>(weather.getCheckedDate().toString(),
+                    Math.abs((weather.getMaxTemperature() - weather.getMinTemperature()) / 2.0
+                            + weather.getMinTemperature() - currentWeather)));
+        }
     }
 
     @Override
