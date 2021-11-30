@@ -75,7 +75,7 @@
                   </ImageView>
                </graphic>
             </MFXButton>
-            <MFXButton fx:id="settingsButton" layoutX="10.0" layoutY="110.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Настройки" GridPane.rowIndex="5">
+            <MFXButton fx:id="settingsButton" layoutX="10.0" layoutY="110.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" onAction="#Settings" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Настройки" GridPane.rowIndex="5">
                <padding>
                   <Insets left="13.0" right="13.0" />
                </padding>

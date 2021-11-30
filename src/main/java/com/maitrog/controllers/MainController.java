@@ -163,6 +163,12 @@ public class MainController implements Initializable {
         loadScene((Pane) parent, "/com/maitrog/views/GraphicsError.fxml");
     }
 
+    public void Settings(ActionEvent event) throws IOException {
+        title.setText("Настройки");
+        Parent parent = settingsButton.getParent().getParent();
+        loadScene((Pane) parent, "/com/maitrog/views/Settings.fxml");
+    }
+
     private void loadScene(Pane pane, String s) throws IOException {
         var children = pane.getChildren();
         Main.logger.log(Level.INFO, "Scene start loading");
