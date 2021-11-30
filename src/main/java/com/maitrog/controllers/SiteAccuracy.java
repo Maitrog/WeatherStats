@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.image.ImageView;
 
 import java.io.IOException;
 import java.net.URL;
@@ -34,6 +35,9 @@ public class SiteAccuracy implements Initializable {
     private MFXButton loadButton;
 
     @FXML
+    private ImageView loadGif;
+
+    @FXML
     private void createChart() {
         lineChart.getData().clear();
         addData();
@@ -41,6 +45,7 @@ public class SiteAccuracy implements Initializable {
 
     private void addData() {
         loadButton.setDisable(true);
+        loadGif.setVisible(true);
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         SiteType siteType;
         switch (comboBox.getSelectedValue()) {
@@ -127,13 +132,13 @@ public class SiteAccuracy implements Initializable {
 
             IntStream.range(0, 15).forEach(i -> series.getData().add(new XYChart.Data<>(String.valueOf(i), totalAvgTemperature[i])));
             Platform.runLater(() -> {
+                loadGif.setVisible(false);
                 lineChart.getData().add(series);
                 loadButton.setDisable(false);
             });
         });
         plot.setDaemon(true);
         plot.start();
-
     }
 
     @Override
