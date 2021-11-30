@@ -8,17 +8,17 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maitrog.controllers.UpdateDatabaseController">
    <children>
-      <Text layoutX="14.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Last update:" wrappingWidth="111.201171875" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
+      <Text layoutX="14.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Последнее обновление:" wrappingWidth="227.201171875" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
          <font>
             <Font size="20.0" />
          </font>
       </Text>
-      <Text fx:id="lastCheckDate" layoutX="126.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="17.10.2021" AnchorPane.leftAnchor="125.0" AnchorPane.topAnchor="15.0">
+      <Text fx:id="lastCheckDate" layoutX="242.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="17.10.2021" AnchorPane.leftAnchor="242.0" AnchorPane.topAnchor="14.41796875">
          <font>
             <Font size="20.0" />
          </font>
       </Text>
       <MFXProgressBar fx:id="progressBar" layoutX="15.0" layoutY="50.0" prefHeight="25.0" prefWidth="501.0" progress="0.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="57.0" />
-      <MFXButton fx:id="updateButton" buttonType="RAISED" depthLevel="LEVEL0" layoutX="15.0" layoutY="126.0" onAction="#updateDatabase" prefHeight="45.0" prefWidth="125.0" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Update" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="97.0" />
+      <MFXButton fx:id="updateButton" buttonType="RAISED" depthLevel="LEVEL0" layoutX="15.0" layoutY="126.0" onAction="#updateDatabase" prefHeight="45.0" prefWidth="125.0" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Обновить" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="97.0" />
    </children>
 </AnchorPane>
