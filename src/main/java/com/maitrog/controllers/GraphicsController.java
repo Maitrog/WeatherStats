@@ -1,27 +1,24 @@
 package com.maitrog.controllers;
 
-import com.maitrog.models.*;
-
-import java.net.URL;
-import java.sql.Date;
-import java.util.ResourceBundle;
-
-import io.github.palexdev.materialfx.controls.MFXButton;
+import com.maitrog.models.DbWeather;
+import com.maitrog.models.SiteType;
+import com.maitrog.models.Weather;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXTextField;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 
 import java.io.IOException;
+import java.net.URL;
+import java.sql.Date;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.ResourceBundle;
 
 public class GraphicsController implements Initializable {
 
@@ -39,21 +36,15 @@ public class GraphicsController implements Initializable {
     private MFXDatePicker datePicker;
 
     @FXML
-    private MFXButton plotChartButton;
-
-    @FXML
-    private MFXButton plotMedianButton;
-
-    @FXML
     private void plotMedian() {
-        lineChart.getData().clear();
         addMedian();
     }
 
     @FXML
-    private void plotChart(ActionEvent e) {
+    private void plotChart() {
         lineChart.getData().clear();
         addData();
+        plotMedian();
     }
 
     private void fixRequest(List<Weather> weather) {
@@ -61,35 +52,35 @@ public class GraphicsController implements Initializable {
     }
 
     private void addMedian() {
-        XYChart.Series<String, Number> series = new XYChart.Series();
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
         List<Weather> weathers = new ArrayList<>();
         try {
             switch (comboBox.getSelectedValue()) {
                 case "Rambler" -> {
                     weathers = DbWeather.getInstance().getWeathers(textField.getText(), SiteType.Rambler,
                             Date.valueOf(datePicker.getDate()));
-                    series.setName("Rambler");
+                    series.setName("Rambler - Медиана");
                     fixRequest(weathers);
                 }
                 case "Yandex" -> {
                     weathers = DbWeather.getInstance().getWeathers(textField.getText(), SiteType.Yandex,
                             Date.valueOf(datePicker.getDate()));
-                    series.setName("Yandex");
+                    series.setName("Yandex - Медиана");
                     fixRequest(weathers);
                 }
                 case "WorldWeather" -> {
                     weathers = DbWeather.getInstance().getWeathers(textField.getText(),
                             SiteType.WorldWeather, Date.valueOf(datePicker.getDate()));
-                    series.setName("WorldWeather");
+                    series.setName("WorldWeather - Медиана");
                     fixRequest(weathers);
                 }
                 case "All" -> {
                     List<Weather> ramblerDateWeather;
                     List<Weather> yandexDateWeather;
                     List<Weather> worldDateWeather;
-                    XYChart.Series<String, Number> ramblerSeries = new XYChart.Series();
-                    XYChart.Series<String, Number> yandexSeries = new XYChart.Series();
-                    XYChart.Series<String, Number> worldSeries = new XYChart.Series();
+                    XYChart.Series<String, Number> ramblerSeries = new XYChart.Series<>();
+                    XYChart.Series<String, Number> yandexSeries = new XYChart.Series<>();
+                    XYChart.Series<String, Number> worldSeries = new XYChart.Series<>();
                     ramblerDateWeather = DbWeather.getInstance().getWeathers(textField.getText(), SiteType.Rambler,
                             Date.valueOf(datePicker.getDate()));
                     yandexDateWeather = DbWeather.getInstance().getWeathers(textField.getText(), SiteType.Yandex,
@@ -116,7 +107,7 @@ public class GraphicsController implements Initializable {
                         ramblerSeries.getData().add(new XYChart.Data<>(weather.getCheckedDate().toString(), median));
                     }
                     lineChart.getData().add(ramblerSeries);
-                    ramblerSeries.setName("Rambler");
+                    ramblerSeries.setName("Rambler - Медиана");
                     for (Weather weather : yandexDateWeather) {
                         double temperature = (weather.getMaxTemperature() - weather.getMinTemperature());
                         temperature /= 2;
@@ -130,7 +121,7 @@ public class GraphicsController implements Initializable {
                         yandexSeries.getData().add(new XYChart.Data<>(weather.getCheckedDate().toString(), median));
                     }
                     lineChart.getData().add(yandexSeries);
-                    yandexSeries.setName("Yandex");
+                    yandexSeries.setName("Yandex - Медиана");
                     for (Weather weather : worldDateWeather) {
                         double temperature = (weather.getMaxTemperature() - weather.getMinTemperature());
                         temperature /= 2;
@@ -144,7 +135,7 @@ public class GraphicsController implements Initializable {
                         worldSeries.getData().add(new XYChart.Data<>(weather.getCheckedDate().toString(), median));
                     }
                     lineChart.getData().add(worldSeries);
-                    worldSeries.setName("WorldWeather");
+                    worldSeries.setName("WorldWeather - Медиана");
                     return;
                 }
             }
@@ -159,7 +150,9 @@ public class GraphicsController implements Initializable {
             double median;
             if (parsedWeather.size() % 2 == 0) median = (parsedWeather.get(parsedWeather.size() / 2) + parsedWeather.get(parsedWeather.size() / 2 - 1)) / 2;
             else median = parsedWeather.get(parsedWeather.size() / 2);
-            series.getData().add(new XYChart.Data<>(datePicker.getDate().toString(), median));
+            for (Weather weather : weathers) {
+                series.getData().add(new XYChart.Data<>(weather.getCheckedDate().toString(), median));
+            }
             lineChart.getData().add(series);
 
         } catch (SQLException | ClassNotFoundException | IOException e) {
@@ -168,7 +161,7 @@ public class GraphicsController implements Initializable {
     }
 
     private void addData() {
-        XYChart.Series<String, Number> series = new XYChart.Series();
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
         List<Weather> targetDateWeather = new ArrayList<>();
         try {
             switch (comboBox.getSelectedValue()) {
@@ -194,9 +187,9 @@ public class GraphicsController implements Initializable {
                     List<Weather> ramblerDateWeather;
                     List<Weather> yandexDateWeather;
                     List<Weather> worldDateWeather;
-                    XYChart.Series<String, Number> ramblerSeries = new XYChart.Series();
-                    XYChart.Series<String, Number> yandexSeries = new XYChart.Series();
-                    XYChart.Series<String, Number> worldSeries = new XYChart.Series();
+                    XYChart.Series<String, Number> ramblerSeries = new XYChart.Series<>();
+                    XYChart.Series<String, Number> yandexSeries = new XYChart.Series<>();
+                    XYChart.Series<String, Number> worldSeries = new XYChart.Series<>();
                     ramblerDateWeather = DbWeather.getInstance().getWeathers(textField.getText(), SiteType.Rambler,
                             Date.valueOf(datePicker.getDate()));
                     yandexDateWeather = DbWeather.getInstance().getWeathers(textField.getText(), SiteType.Yandex,

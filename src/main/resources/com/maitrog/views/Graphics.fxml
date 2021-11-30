@@ -38,7 +38,6 @@
       </HBox>
       <VBox alignment="CENTER" layoutY="369.0" prefHeight="31.0" prefWidth="600.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <MFXButton fx:id="plotMedianButton" alignment="CENTER" depthLevel="LEVEL1" maxWidth="150.0" minWidth="150.0" onAction="#plotMedian" prefHeight="0.0" prefWidth="150.0" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Load Median Value" textAlignment="CENTER" />
             <MFXButton fx:id="plotChartButton" alignment="CENTER" depthLevel="LEVEL1" maxWidth="150.0" minWidth="150.0" onAction="#plotChart" prefHeight="31.0" prefWidth="150.0" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Построить" textAlignment="CENTER" />
          </children>
       </VBox>
