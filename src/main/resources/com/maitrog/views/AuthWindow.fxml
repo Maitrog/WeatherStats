@@ -6,16 +6,16 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maitrog.controllers.AuthController">
+<AnchorPane prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maitrog.controllers.AuthController">
    <children>
       <MFXTextField fx:id="login" layoutX="70.0" layoutY="60.0" prefWidth="160.0" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="70.0" />
       <MFXPasswordField fx:id="password" layoutX="70.0" layoutY="120.0" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="103.0" />
       <MFXPasswordField fx:id="confirmPassword" layoutX="-218.0" layoutY="157.0" prefHeight="0.0" prefWidth="160.0" />
-      <MFXButton fx:id="registerFinal" layoutX="-158.0" layoutY="290.0" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Sign In" />
-      <MFXButton fx:id="authorize" layoutX="120.0" layoutY="230.0" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Login" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="70.0" />
-      <MFXButton fx:id="register" layoutX="85.0" layoutY="275.0" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Sign In" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="70.0" />
+      <MFXButton fx:id="registerFinal" layoutX="-158.0" layoutY="290.0" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Регистрация" />
+      <MFXButton fx:id="authorize" layoutX="120.0" layoutY="230.0" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Войти" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="70.0" />
+      <MFXButton fx:id="register" layoutX="85.0" layoutY="275.0" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Регистрация" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="70.0" />
       <MFXButton fx:id="backToLogin" layoutX="-138.0" layoutY="290.0" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="WanT To LoG iN?" />
-      <Label layoutX="70.0" layoutY="86.0" prefHeight="18.0" prefWidth="49.0" text="Login" />
-      <Label layoutX="70.0" layoutY="148.0" prefHeight="18.0" prefWidth="85.0" text="Password" />
+      <Label layoutX="70.0" layoutY="86.0" prefHeight="18.0" prefWidth="49.0" text="Логин" />
+      <Label layoutX="70.0" layoutY="148.0" prefHeight="18.0" prefWidth="85.0" text="Пароль" />
    </children>
 </AnchorPane>

@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="mainScene" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maitrog.controllers.MainController">
+<AnchorPane fx:id="mainScene" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maitrog.controllers.MainController">
    <children>
       <AnchorPane layoutX="50.0" layoutY="50.0" prefHeight="350.0" prefWidth="550.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0" />
       <GridPane fx:id="gridPane" layoutY="50.0" maxHeight="350.0" maxWidth="180.0" minHeight="350.0" minWidth="50.0" prefHeight="350.0" prefWidth="50.0" style="-fx-background-color: #b0bec5;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="50.0">
@@ -28,7 +28,7 @@
             <RowConstraints />
          </rowConstraints>
          <children>
-            <MFXButton fx:id="graphicsButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" onAction="#graphics" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Temperature charts" GridPane.halignment="LEFT">
+            <MFXButton fx:id="graphicsButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" onAction="#graphics" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Прогноз погоды" GridPane.halignment="LEFT">
                <padding>
                   <Insets left="13.0" right="13.0" />
                </padding>
@@ -40,15 +40,18 @@
                   </ImageView>
                </graphic>
             </MFXButton>
-            <MFXButton fx:id="graphicsErrorButton" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" onAction="#graphicsError" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" GridPane.rowIndex="1">
+            <MFXButton fx:id="graphicsErrorButton" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" onAction="#graphicsError" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Отклонение от средней температуты" GridPane.rowIndex="1">
                <padding>
                   <Insets left="13.0" right="13.0" />
                </padding>
                <graphic>
-                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../bar-chart.png" />
+                     </image></ImageView>
                </graphic>
             </MFXButton>
-            <MFXButton fx:id="siteAccuracy" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" onAction="#siteAccuracy" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Site Accuracy" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+            <MFXButton fx:id="siteAccuracy" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" onAction="#siteAccuracy" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Среднее отклонение прогноза погоды" GridPane.halignment="LEFT" GridPane.rowIndex="2">
                <padding>
                   <Insets left="13.0" right="13.0" />
                </padding>
@@ -60,7 +63,7 @@
                   </ImageView>
                </graphic>
             </MFXButton>
-            <MFXButton fx:id="updateButton" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" onAction="#updateDatabase" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Update database" GridPane.rowIndex="3">
+            <MFXButton fx:id="updateButton" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" onAction="#updateDatabase" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Обновление данные" GridPane.rowIndex="3">
                <padding>
                   <Insets left="13.0" right="13.0" />
                </padding>
@@ -72,7 +75,7 @@
                   </ImageView>
                </graphic>
             </MFXButton>
-            <MFXButton fx:id="settingsButton" layoutX="10.0" layoutY="110.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Settings" GridPane.rowIndex="5">
+            <MFXButton fx:id="settingsButton" layoutX="10.0" layoutY="110.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Настройки" GridPane.rowIndex="5">
                <padding>
                   <Insets left="13.0" right="13.0" />
                </padding>

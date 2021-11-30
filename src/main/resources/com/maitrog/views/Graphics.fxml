@@ -12,19 +12,19 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maitrog.controllers.GraphicsController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maitrog.controllers.GraphicsController">
    <children>
-      <LineChart fx:id="lineChart" layoutX="23.0" layoutY="54.0" prefHeight="313.0" prefWidth="540.0" title="Temperature Chart" AnchorPane.bottomAnchor="51.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="51.0">
+      <LineChart fx:id="lineChart" layoutX="23.0" layoutY="54.0" prefHeight="313.0" prefWidth="540.0" title="Прогноз погоды" AnchorPane.bottomAnchor="51.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="51.0">
         <xAxis>
-          <CategoryAxis animated="false" label="Check date" prefHeight="77.0" prefWidth="492.0" />
+          <CategoryAxis animated="false" label="Дата снятия показаний" prefHeight="77.0" prefWidth="492.0" />
         </xAxis>
         <yAxis>
-          <NumberAxis label="Temperature" side="LEFT" />
+          <NumberAxis label="Температура" side="LEFT" />
         </yAxis>
       </LineChart>
       <HBox alignment="TOP_CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="31.0" prefWidth="600.0" spacing="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
          <children>
-            <MFXComboBox fx:id="comboBox" lineStrokeWidth="2.0" prefHeight="31.0" prefWidth="150.0" promptText="Select" unfocusedLineColor="#9454f0b2">
+            <MFXComboBox fx:id="comboBox" lineStrokeWidth="2.0" prefHeight="31.0" prefWidth="150.0" promptText="Выберите" unfocusedLineColor="#9454f0b2">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
@@ -38,8 +38,8 @@
       </HBox>
       <VBox alignment="CENTER" layoutY="369.0" prefHeight="31.0" prefWidth="600.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <MFXButton fx:id="plotChartButton1" alignment="CENTER" depthLevel="LEVEL1" layoutX="235.0" layoutY="10.0" maxWidth="150.0" minWidth="150.0" onAction="#plotChart" prefHeight="31.0" prefWidth="150.0" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Load Line Chart" textAlignment="CENTER" />
             <MFXButton fx:id="plotMedianButton" alignment="CENTER" depthLevel="LEVEL1" maxWidth="150.0" minWidth="150.0" onAction="#plotMedian" prefHeight="0.0" prefWidth="150.0" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Load Median Value" textAlignment="CENTER" />
+            <MFXButton fx:id="plotChartButton" alignment="CENTER" depthLevel="LEVEL1" maxWidth="150.0" minWidth="150.0" onAction="#plotChart" prefHeight="31.0" prefWidth="150.0" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Построить" textAlignment="CENTER" />
          </children>
       </VBox>
    </children>
