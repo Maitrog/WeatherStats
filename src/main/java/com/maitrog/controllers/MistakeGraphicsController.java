@@ -56,6 +56,10 @@ public class MistakeGraphicsController implements Initializable {
         addData();
     }
 
+    private void fixRequest(List<Weather> weather) {
+        while (weather.size() >= 15) weather.remove(0);
+    }
+
     private void addData() {
         if (mistakeDatePicker.getDate().isAfter(LocalDate.now())) return;
         try {
@@ -71,6 +75,10 @@ public class MistakeGraphicsController implements Initializable {
                     Date.valueOf(mistakeDatePicker.getDate()));
             worldDateWeather = DbWeather.getInstance().getWeathers(mistakeTextField.getText(), SiteType.WorldWeather,
                     Date.valueOf(mistakeDatePicker.getDate()));
+
+            fixRequest(ramblerDateWeather);
+            fixRequest(yandexDateWeather);
+            fixRequest(worldDateWeather);
 
             Weather ramblerWeather = ramblerDateWeather.get(ramblerDateWeather.size() - 1);
             Weather yandexWeather = yandexDateWeather.get(yandexDateWeather.size() - 1);
