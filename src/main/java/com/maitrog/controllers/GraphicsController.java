@@ -112,7 +112,9 @@ public class GraphicsController implements Initializable {
                     Collections.sort(parsedRambler);
                     if (parsedRambler.size() % 2 == 0) median = (parsedRambler.get(parsedRambler.size() / 2) + parsedRambler.get(parsedRambler.size() / 2 - 1)) / 2;
                     else median = parsedRambler.get(parsedRambler.size() / 2);
-                    ramblerSeries.getData().add(new XYChart.Data<>(datePicker.getDate().toString(), median));
+                    for (Weather weather : ramblerDateWeather) {
+                        ramblerSeries.getData().add(new XYChart.Data<>(weather.getCheckedDate().toString(), median));
+                    }
                     lineChart.getData().add(ramblerSeries);
                     ramblerSeries.setName("Rambler");
                     for (Weather weather : yandexDateWeather) {
@@ -124,7 +126,9 @@ public class GraphicsController implements Initializable {
                     Collections.sort(parsedYandex);
                     if (parsedYandex.size() % 2 == 0) median = (parsedYandex.get(parsedYandex.size() / 2) + parsedYandex.get(parsedYandex.size() / 2 - 1)) / 2;
                     else median = parsedYandex.get(parsedYandex.size() / 2);
-                    yandexSeries.getData().add(new XYChart.Data<>(datePicker.getDate().toString(), median));
+                    for (Weather weather : yandexDateWeather) {
+                        yandexSeries.getData().add(new XYChart.Data<>(weather.getCheckedDate().toString(), median));
+                    }
                     lineChart.getData().add(yandexSeries);
                     yandexSeries.setName("Yandex");
                     for (Weather weather : worldDateWeather) {
@@ -136,7 +140,9 @@ public class GraphicsController implements Initializable {
                     Collections.sort(parsedWorld);
                     if (parsedWorld.size() % 2 == 0) median = (parsedWorld.get(parsedWorld.size() / 2) + parsedWorld.get(parsedWorld.size() / 2 - 1)) / 2;
                     else median = parsedWorld.get(parsedWorld.size() / 2);
-                    worldSeries.getData().add(new XYChart.Data<>(datePicker.getDate().toString(), median));
+                    for (Weather weather : worldDateWeather) {
+                        worldSeries.getData().add(new XYChart.Data<>(weather.getCheckedDate().toString(), median));
+                    }
                     lineChart.getData().add(worldSeries);
                     worldSeries.setName("WorldWeather");
                     return;
