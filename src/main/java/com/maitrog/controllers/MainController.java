@@ -140,19 +140,19 @@ public class MainController implements Initializable {
     }
 
     public void updateDatabase(ActionEvent event) throws IOException {
-        title.setText("Update data");
+        title.setText("Обновление данных");
         Parent parent = updateButton.getParent().getParent();
         loadScene((Pane) parent, "/com/maitrog/views/UpdateDatabase.fxml");
     }
 
     public void graphics(ActionEvent event) throws IOException {
-        title.setText("Temperature charts");
+        title.setText("Прогноз погоды");
         Parent parent = graphicsButton.getParent().getParent();
         loadScene((Pane) parent, "/com/maitrog/views/Graphics.fxml");
     }
 
     public void siteAccuracy(ActionEvent event) throws IOException {
-        title.setText("Site Accuracy");
+        title.setText("Среднее отклонение прогноза погоды");
         Parent parent = siteAccuracy.getParent().getParent();
         loadScene((Pane) parent, "/com/maitrog/views/SiteAccuracy.fxml");
     }

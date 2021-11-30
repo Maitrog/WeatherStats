@@ -14,17 +14,26 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maitrog.controllers.SiteAccuracy">
     <children>
-        <LineChart fx:id="lineChart" animated="false" layoutX="23.0" layoutY="54.0" prefHeight="313.0" prefWidth="540.0" title="Site Accuracy" AnchorPane.bottomAnchor="51.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="51.0">
+      <HBox alignment="CENTER" layoutX="15.0" layoutY="51.0" prefHeight="298.0" prefWidth="570.0" AnchorPane.bottomAnchor="51.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="51.0">
+         <children>
+            <ImageView fx:id="loadGif" fitHeight="50.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" visible="false">
+               <image>
+                  <Image url="@../../../loading.gif" />
+               </image>
+            </ImageView>
+         </children>
+      </HBox>
+        <LineChart fx:id="lineChart" animated="false" layoutX="23.0" layoutY="54.0" prefHeight="313.0" prefWidth="540.0" title="Среднее отклонение от реального значаения" AnchorPane.bottomAnchor="51.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="51.0">
             <xAxis>
-                <CategoryAxis side="BOTTOM" />
+                <CategoryAxis label="Дней до даты" side="BOTTOM" />
             </xAxis>
             <yAxis>
-                <NumberAxis side="LEFT" />
+                <NumberAxis label="Отклонение" side="LEFT" />
             </yAxis>
         </LineChart>
         <HBox alignment="TOP_CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="31.0" prefWidth="600.0" spacing="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
             <children>
-                <MFXComboBox fx:id="comboBox" lineStrokeWidth="2.0" prefHeight="31.0" prefWidth="150.0" promptText="Select" unfocusedLineColor="#9454f0b2">
+                <MFXComboBox fx:id="comboBox" lineStrokeWidth="2.0" prefHeight="31.0" prefWidth="150.0" promptText="Выберите" unfocusedLineColor="#9454f0b2">
                     <HBox.margin>
                         <Insets />
                     </HBox.margin>
@@ -39,14 +48,5 @@
                 <MFXButton fx:id="loadButton" alignment="CENTER" depthLevel="LEVEL1" maxWidth="150.0" minWidth="150.0" onAction="#createChart" prefHeight="31.0" prefWidth="150.0" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Load Line Chart" textAlignment="CENTER" />
             </children>
         </VBox>
-      <HBox alignment="CENTER" layoutX="15.0" layoutY="51.0" prefHeight="298.0" prefWidth="570.0" AnchorPane.bottomAnchor="51.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="51.0">
-         <children>
-            <ImageView fx:id="loadGif" fitHeight="50.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" visible="false">
-               <image>
-                  <Image url="@../../../loading.gif" />
-               </image>
-            </ImageView>
-         </children>
-      </HBox>
     </children>
 </AnchorPane>
