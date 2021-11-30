@@ -40,7 +40,7 @@
                   </ImageView>
                </graphic>
             </MFXButton>
-            <MFXButton fx:id="graphicsErrorButton" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" onAction="#graphicsError" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Button" GridPane.rowIndex="1">
+            <MFXButton fx:id="graphicsErrorButton" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="50.0" onAction="#graphicsError" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Отклонение от средней температуты" GridPane.rowIndex="1">
                <padding>
                   <Insets left="13.0" right="13.0" />
                </padding>
