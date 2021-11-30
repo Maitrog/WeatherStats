@@ -77,3 +77,4 @@ fabric.properties
 /build/
 /build/classes/java/main/
 src/main/resources/config.json
+InfoLog.log
