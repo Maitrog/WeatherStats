@@ -40,6 +40,9 @@ public class MainController implements Initializable {
     private MFXButton graphicsButton;
 
     @FXML
+    private MFXButton siteAccuracy;
+
+    @FXML
     private MFXButton settingsButton;
 
     @FXML
@@ -74,6 +77,7 @@ public class MainController implements Initializable {
         graphicsButton.setAlignment(Pos.CENTER_LEFT);
         updateButton.setAlignment(Pos.CENTER_LEFT);
         settingsButton.setAlignment(Pos.CENTER_LEFT);
+        siteAccuracy.setAlignment(Pos.CENTER_LEFT);
         graphicsErrorButton.setAlignment(Pos.CENTER_LEFT);
         Thread open = new Thread(() -> {
             animTimer = new Timer();
@@ -147,6 +151,12 @@ public class MainController implements Initializable {
         loadScene((Pane) parent, "/com/maitrog/views/Graphics.fxml");
     }
 
+    public void siteAccuracy(ActionEvent event) throws IOException {
+        title.setText("Site Accuracy");
+        Parent parent = siteAccuracy.getParent().getParent();
+        loadScene((Pane) parent, "/com/maitrog/views/SiteAccuracy.fxml");
+    }
+  
     public void graphicsError(ActionEvent event) throws IOException {
         title.setText("Temperature mistake charts");
         Parent parent = graphicsErrorButton.getParent().getParent();
@@ -159,7 +169,7 @@ public class MainController implements Initializable {
         AnchorPane anchorPane = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(s)));
         Main.logger.log(Level.INFO, "Scene was loaded");
         AnchorPane.setBottomAnchor(anchorPane, 0.0);
-        AnchorPane.setLeftAnchor(anchorPane, 50.0);
+        AnchorPane.setLeftAnchor(anchorPane, isOpen ? 180.0 : 50.0);
         AnchorPane.setRightAnchor(anchorPane, 0.0);
         AnchorPane.setTopAnchor(anchorPane, 50.0);
         children.set(0, anchorPane);
