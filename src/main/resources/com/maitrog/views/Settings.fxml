@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXLabel?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maitrog.controllers.SettingsController">
+    <children>
+        <HBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="600.0">
+                    <children>
+                        <MFXLabel text="IP базы данных">
+                            <VBox.margin>
+                                <Insets bottom="25.0" />
+                            </VBox.margin>
+                        </MFXLabel>
+                        <MFXLabel text="Название базы данных">
+                            <VBox.margin>
+                                <Insets bottom="25.0" />
+                            </VBox.margin>
+                        </MFXLabel>
+                        <MFXLabel text="Имя">
+                            <VBox.margin>
+                                <Insets bottom="25.0" />
+                            </VBox.margin>
+                        </MFXLabel>
+                        <MFXLabel text="Пароль">
+                            <VBox.margin>
+                                <Insets bottom="25.0" />
+                            </VBox.margin>
+                        </MFXLabel>
+                    </children>
+                    <HBox.margin>
+                        <Insets top="50.0" />
+                    </HBox.margin>
+                </VBox>
+                <VBox alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" prefHeight="400.0" prefWidth="600.0">
+                    <children>
+                        <MFXTextField fx:id="ipDB">
+                            <VBox.margin>
+                                <Insets bottom="25.0" />
+                            </VBox.margin>
+                        </MFXTextField>
+                        <MFXTextField fx:id="nameDB">
+                            <VBox.margin>
+                                <Insets bottom="25.0" />
+                            </VBox.margin>
+                        </MFXTextField>
+                        <MFXTextField fx:id="userName">
+                            <VBox.margin>
+                                <Insets bottom="25.0" />
+                            </VBox.margin>
+                        </MFXTextField>
+                        <MFXTextField fx:id="userPassword">
+                            <VBox.margin>
+                                <Insets bottom="25.0" />
+                            </VBox.margin>
+                        </MFXTextField>
+                    </children>
+               <HBox.margin>
+                  <Insets top="50.0" />
+               </HBox.margin>
+                </VBox>
+            </children>
+        </HBox>
+      <MFXButton fx:id="saveConfig" alignment="CENTER" layoutX="250.0" layoutY="300.0" onAction="#saveConfig" text="Сохранить" AnchorPane.leftAnchor="230.0" AnchorPane.rightAnchor="230.0" />
+    </children>
+</AnchorPane>
