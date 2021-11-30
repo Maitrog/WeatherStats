@@ -6,9 +6,12 @@ import java.net.URL;
 import java.sql.Date;
 import java.util.ResourceBundle;
 
+import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
@@ -31,11 +34,15 @@ public class GraphicsController implements Initializable {
     @FXML
     private MFXTextField textField;
 
+
     @FXML
     private MFXDatePicker datePicker;
 
     @FXML
-    private void handleButtonAction(ActionEvent e) {
+    private MFXButton plotChartButton;
+
+    @FXML
+    private void plotChart(ActionEvent e) {
         lineChart.getData().clear();
         addData();
     }
@@ -112,5 +119,6 @@ public class GraphicsController implements Initializable {
         comboBox.getItems().add("Yandex");
         comboBox.getItems().add("Rambler");
         comboBox.getItems().add("WorldWeather");
+
     }
 }
