@@ -70,61 +70,84 @@ public class DbWeather {
             throwables.printStackTrace();
             return Collections.emptyList();
         }
-    }public List<List<Weather>> getSortedWeathers(int cityId, SiteType siteType) {
+    }
+
+    public List<List<List<Weather>>> getAllSortedWeather(SiteType siteType) {
         try (Statement statement = connection.createStatement()) {
             ResultSet weatherResult = statement.executeQuery(String.format("""
                             SELECT *
                             FROM Weather
-                            WHERE CityId=%d AND SiteType = %d AND TargetDate IN (SELECT DISTINCT TargetDate
+                            WHERE SiteType = %d AND TargetDate IN (SELECT DISTINCT TargetDate
                             FROM Weather
-                            WHERE CityId = %d AND TargetDate = CheckedDate)
-                            ORDER BY TargetDate, CheckedDate""",
-                    cityId, SiteType.getValue(siteType), cityId));
+                            WHERE TargetDate = CheckedDate)
+                            ORDER BY CityId, TargetDate, CheckedDate""",
+                    SiteType.getValue(siteType)));
             List<Weather> parsedWeather = parseWeatherResponse(weatherResult);
+            List<List<List<Weather>>> allSortedWeathers = new ArrayList<>();
             List<List<Weather>> sortedWeather = new ArrayList<>();
             Date currentDate = parsedWeather.get(0).getTargetDate();
+            int currentCityId = 0;
             List<Weather> weathers = new ArrayList<>();
-            for(Weather weather : parsedWeather){
+            for (Weather weather : parsedWeather) {
+                if (currentCityId != weather.getCityId()) {
+                    if (currentCityId != 0) {
+                        sortedWeather.add(new ArrayList<>(weathers));
+                        weathers = new ArrayList<>();
+                        allSortedWeathers.add(new ArrayList<>(sortedWeather));
+                    }
+                    currentCityId = weather.getCityId();
+                    sortedWeather = new ArrayList<>();
+                }
                 if (!currentDate.equals(weather.getTargetDate())) {
-                    sortedWeather.add(new ArrayList<>(weathers));
+                    if (weathers.size() > 0) {
+                        sortedWeather.add(new ArrayList<>(weathers));
+                        weathers = new ArrayList<>();
+                    }
                     currentDate = weather.getTargetDate();
-                    weathers = new ArrayList<>();
                 }
                 weathers.add(weather);
             }
             sortedWeather.add(new ArrayList<>(weathers));
-            return sortedWeather;
+            allSortedWeathers.add(new ArrayList<>(sortedWeather));
+            return allSortedWeathers;
         } catch (SQLException throwables) {
             Main.logger.log(Level.SEVERE, throwables.getMessage());
-            throwables.printStackTrace();
             return Collections.emptyList();
         }
     }
 
-    public List<Double> getAllAvgTemperature(int cityId){
+    public List<List<Double>> getAllAvgTemperature() {
         try (Statement statement = connection.createStatement()) {
-            ResultSet avgTempResult = statement.executeQuery(String.format("""
-                            WITH allTemp as ((SELECT MinTemperature as Temperature, TargetDate
-                            FROM Weather
-                            WHERE CityId = %d AND TargetDate = CheckedDate)
-                            UNION ALL
-                            (SELECT MaxTemperature as Temperature, TargetDate
-                            FROM Weather
-                            Where CityId = %d AND TargetDate = CheckedDate))
-                            SELECT AVG(Cast(Temperature as Float)) as avgTemp
-                            FROM allTemp
-                            GROUP BY(TargetDate)
-                            ORDER BY(TargetDate)""",
-                    cityId, cityId));
-
+            ResultSet avgTempResult = statement.executeQuery("""
+                    WITH allTemp as ((SELECT MinTemperature as Temperature, TargetDate, CityId
+                    FROM Weather
+                    WHERE TargetDate = CheckedDate)
+                    UNION ALL
+                    (SELECT MaxTemperature as Temperature, TargetDate, CityId
+                    FROM Weather
+                    Where TargetDate = CheckedDate))
+                    SELECT CityId, AVG(Cast(Temperature as Float)) as avgTemp
+                    FROM allTemp
+                    GROUP BY CityId, TargetDate
+                    ORDER BY CityId, TargetDate""");
+            List<List<Double>> allAvgTemperature = new ArrayList<>();
             List<Double> avgTemp = new ArrayList<>();
+            int cityId = 0;
             while (avgTempResult.next()) {
+                int newCityId = avgTempResult.getInt("cityId");
+                if (cityId != newCityId) {
+                    if (cityId != 0) {
+                        allAvgTemperature.add(avgTemp);
+                    }
+                    cityId = newCityId;
+                    avgTemp = new ArrayList<>();
+                }
                 avgTemp.add(avgTempResult.getDouble("avgTemp"));
             }
-            return avgTemp;
+            allAvgTemperature.add(avgTemp);
+            return allAvgTemperature;
         } catch (SQLException throwables) {
             Main.logger.log(Level.SEVERE, throwables.getMessage());
-            throwables.printStackTrace();
             return Collections.emptyList();
         }
     }
