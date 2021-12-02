@@ -61,7 +61,7 @@ public class MistakeGraphicsController implements Initializable {
     @FXML
     private void plotDistributionLaw() {
         mistakeLineChart.getData().clear();
-        makeDistributionLaw(20, 3);//считывание с источника
+        makeDistributionLaw(30, 3);//считывание с источника
     }
 
     private void makeDistributionLaw(int minusDays, int dateDiff) {
@@ -109,7 +109,7 @@ public class MistakeGraphicsController implements Initializable {
                     }
 
                     for(Map.Entry<Integer, Integer> entry : countMistake.entrySet()) {
-                        distributionSeries.getData().add(new XYChart.Data<>(entry.getValue().toString(), entry.getKey()));
+                        distributionSeries.getData().add(new XYChart.Data<>(entry.getKey().toString(), entry.getValue()));
                     }
 
                     mistakeLineChart.getData().add(distributionSeries);
