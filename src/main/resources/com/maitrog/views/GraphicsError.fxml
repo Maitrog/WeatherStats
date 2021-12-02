@@ -39,6 +39,7 @@
       <VBox alignment="CENTER" layoutY="369.0" prefHeight="31.0" prefWidth="600.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <MFXButton fx:id="plotMistakeChartButton" alignment="CENTER" depthLevel="LEVEL1" maxWidth="150.0" minWidth="150.0" onAction="#plotMistakeChart" prefHeight="31.0" prefWidth="150.0" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Построить график" textAlignment="CENTER" />
+            <MFXButton fx:id="plotDistributionLawButton" alignment="CENTER" depthLevel="LEVEL1" layoutX="235.0" layoutY="10.0" maxWidth="150.0" minWidth="150.0" onAction="#plotDistributionLaw" prefHeight="31.0" prefWidth="150.0" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Закон распределения" textAlignment="CENTER" />
          </children>
       </VBox>
    </children>

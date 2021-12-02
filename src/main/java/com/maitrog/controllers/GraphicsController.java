@@ -234,7 +234,7 @@ public class GraphicsController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        comboBox.getItems().add("All");
+        comboBox.getItems().add("Все");
         comboBox.getItems().add("Yandex");
         comboBox.getItems().add("Rambler");
         comboBox.getItems().add("WorldWeather");

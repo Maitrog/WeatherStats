@@ -17,12 +17,16 @@ import javafx.scene.chart.XYChart;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Array;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
+import java.util.Map;
 
 public class MistakeGraphicsController implements Initializable {
 
@@ -52,6 +56,72 @@ public class MistakeGraphicsController implements Initializable {
 
     private void fixRequest(List<Weather> weather) {
         while (weather.size() >= 15) weather.remove(0);
+    }
+
+    @FXML
+    private void plotDistributionLaw() {
+        mistakeLineChart.getData().clear();
+        makeDistributionLaw(20, 3);//считывание с источника
+    }
+
+    private void makeDistributionLaw(int minusDays, int dateDiff) {
+        if (mistakeDatePicker.getDate().isAfter(LocalDate.now())) return;
+        Thread plot = new Thread(() -> {
+            try {
+                XYChart.Series<String, Number> distributionSeries = new XYChart.Series<>();
+
+                List<Weather> ramblerDateWeather = getWeathers(SiteType.Rambler);
+                List<Weather> yandexDateWeather = getWeathers(SiteType.Yandex);
+                List<Weather> worldDateWeather = getWeathers(SiteType.WorldWeather);
+
+                fixRequest(ramblerDateWeather);
+                fixRequest(yandexDateWeather);
+                fixRequest(worldDateWeather);
+
+                Weather ramblerWeather = ramblerDateWeather.get(ramblerDateWeather.size() - 1);
+                Weather yandexWeather = yandexDateWeather.get(yandexDateWeather.size() - 1);
+                Weather worldWeather = worldDateWeather.get(worldDateWeather.size() - 1);
+                double ramblerTemp = (ramblerWeather.getMaxTemperature() - ramblerWeather.getMinTemperature()) / 2.0
+                        + ramblerWeather.getMinTemperature();
+                double yandexTemp = (yandexWeather.getMaxTemperature() - yandexWeather.getMinTemperature()) / 2.0
+                        + yandexWeather.getMinTemperature();
+                double worldTemp = (worldWeather.getMaxTemperature() - worldWeather.getMinTemperature()) / 2.0
+                        + worldWeather.getMinTemperature();
+                double tmp = (ramblerTemp + yandexTemp + worldTemp) / 3;
+                int currentWeather = (int)Math.round(tmp);
+
+                Date lowestDate = Date.valueOf(mistakeDatePicker.getDate().minusDays(minusDays));
+                List<Weather> distributionWeather = DbWeather.getInstance().getDistributionData(mistakeTextField.getText(),
+                        lowestDate, Date.valueOf(mistakeDatePicker.getDate()), dateDiff);
+                List<Integer> tempsMistake = new ArrayList<>();
+
+                HashMap<Integer, Integer> countMistake = new HashMap<>();
+
+                Platform.runLater(() -> {
+                    for (Weather weather : distributionWeather) {
+                        double temp = (weather.getMaxTemperature() - weather.getMinTemperature()) / 2.0;
+                        tempsMistake.add(currentWeather - (int)Math.round(temp));
+                    }
+
+                    for (int mistake : tempsMistake) {
+                        if (countMistake.containsKey(mistake)) countMistake.put(mistake, countMistake.get(mistake) + 1);
+                        else countMistake.put(mistake, 1);
+                    }
+
+                    for(Map.Entry<Integer, Integer> entry : countMistake.entrySet()) {
+                        distributionSeries.getData().add(new XYChart.Data<>(entry.getValue().toString(), entry.getKey()));
+                    }
+
+                    mistakeLineChart.getData().add(distributionSeries);
+                    distributionSeries.setName("Distribution Law");
+                });
+            } catch (SQLException | ClassNotFoundException |
+                    IOException e) {
+                Main.logger.log(Level.SEVERE, e.getMessage());
+            }
+        });
+        plot.setDaemon(true);
+        plot.start();
     }
 
     private void addData() {
@@ -138,7 +208,7 @@ public class MistakeGraphicsController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        mistakeComboBox.getItems().add("All");
+        mistakeComboBox.getItems().add("Все");
         mistakeComboBox.getItems().add("Yandex");
         mistakeComboBox.getItems().add("Rambler");
         mistakeComboBox.getItems().add("WorldWeather");

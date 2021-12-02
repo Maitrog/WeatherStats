@@ -72,6 +72,23 @@ public class DbWeather {
         }
     }
 
+    public List<Weather> getDistributionData(String name, Date targetDate, Date lowestDate, int dateDiff) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        try (Statement statement = connection.createStatement()) {
+            ResultSet weatherResult = statement.executeQuery(String.format("SELECT Weather.Id, CheckedDate, TargetDate, MinTemperature, MaxTemperature, Pressure, Humidity, SiteType, CityId " +
+                            "FROM Weather " +
+                            "JOIN Cities ON Cities.Id = Weather.CityId " +
+                            "WHERE (Cities.NameRu = '%s' OR Cities.NameEn = '%s') AND (TargetDate BETWEEN '%s' AND '%s') AND DATEDIFF(day, TargetDate, CheckedDate) = %d" +
+                            "ORDER BY(CheckedDate)",
+                    name, name, sdf.format(lowestDate), sdf.format(targetDate), dateDiff));
+            return parseWeatherResponse(weatherResult);
+        } catch (SQLException throwables) {
+            Main.logger.log(Level.SEVERE, throwables.getMessage());
+            throwables.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
     public List<List<List<Weather>>> getAllSortedWeather(SiteType siteType) {
         try (Statement statement = connection.createStatement()) {
             ResultSet weatherResult = statement.executeQuery(String.format("""
