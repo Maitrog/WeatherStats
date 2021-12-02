@@ -92,7 +92,7 @@ public class MistakeGraphicsController implements Initializable {
 
                 Date lowestDate = Date.valueOf(mistakeDatePicker.getDate().minusDays(minusDays));
                 List<Weather> distributionWeather = DbWeather.getInstance().getDistributionData(mistakeTextField.getText(),
-                        lowestDate, Date.valueOf(mistakeDatePicker.getDate()), dateDiff);
+                        Date.valueOf(mistakeDatePicker.getDate()), lowestDate, dateDiff);
                 List<Integer> tempsMistake = new ArrayList<>();
 
                 HashMap<Integer, Integer> countMistake = new HashMap<>();

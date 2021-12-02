@@ -78,7 +78,7 @@ public class DbWeather {
             ResultSet weatherResult = statement.executeQuery(String.format("SELECT Weather.Id, CheckedDate, TargetDate, MinTemperature, MaxTemperature, Pressure, Humidity, SiteType, CityId " +
                             "FROM Weather " +
                             "JOIN Cities ON Cities.Id = Weather.CityId " +
-                            "WHERE (Cities.NameRu = '%s' OR Cities.NameEn = '%s') AND (TargetDate BETWEEN '%s' AND '%s') AND DATEDIFF(day, TargetDate, CheckedDate) = %d" +
+                            "WHERE (Cities.NameRu = '%s' OR Cities.NameEn = '%s') AND (TargetDate BETWEEN '%s' AND '%s') AND DATEDIFF(day, CheckedDate, TargetDate) = %d" +
                             "ORDER BY(CheckedDate)",
                     name, name, sdf.format(lowestDate), sdf.format(targetDate), dateDiff));
             return parseWeatherResponse(weatherResult);
