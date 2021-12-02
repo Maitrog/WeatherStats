@@ -16,17 +16,14 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.Array;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.logging.Level;
-import java.util.Map;
 
 public class MistakeGraphicsController implements Initializable {
 
@@ -111,6 +108,16 @@ public class MistakeGraphicsController implements Initializable {
                     for(Map.Entry<Integer, Integer> entry : countMistake.entrySet()) {
                         distributionSeries.getData().add(new XYChart.Data<>(entry.getKey().toString(), entry.getValue()));
                     }
+
+                    Collections.sort(distributionSeries.getData(), new Comparator<XYChart.Data>() {
+                        @Override
+                        public int compare(XYChart.Data o1, XYChart.Data o2) {
+                            Integer.parseInt(o1.getXValue().toString());
+                            Number xValue1 = Integer.parseInt(o1.getXValue().toString());
+                            Number xValue2 = Integer.parseInt(o2.getXValue().toString());
+                            return new BigDecimal(xValue1.toString()).compareTo(new BigDecimal(xValue2.toString()));
+                        }
+                    });
 
                     mistakeLineChart.getData().add(distributionSeries);
                     distributionSeries.setName("Distribution Law");
