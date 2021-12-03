@@ -48,6 +48,8 @@ public class MistakeGraphicsController implements Initializable {
     @FXML
     private void plotMistakeChart() {
         mistakeLineChart.getData().clear();
+        xAxis.setLabel("Дата проверки");
+        yAxis.setLabel("Дельта температур");
         addData();
     }
 
@@ -58,6 +60,8 @@ public class MistakeGraphicsController implements Initializable {
     @FXML
     private void plotDistributionLaw() {
         mistakeLineChart.getData().clear();
+        xAxis.setLabel("Отклонение температуры");
+        yAxis.setLabel("Количество таких отклонений");
         makeDistributionLaw(30, 3);//считывание с источника
     }
 
