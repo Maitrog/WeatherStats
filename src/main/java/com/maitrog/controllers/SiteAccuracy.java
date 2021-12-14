@@ -1,6 +1,10 @@
 package com.maitrog.controllers;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.maitrog.models.City;
 import com.maitrog.models.DbWeather;
+import com.maitrog.models.Locale;
 import com.maitrog.models.SiteType;
 import com.maitrog.models.Weather;
 import com.maitrog.weatherstats.Main;
@@ -9,10 +13,15 @@ import io.github.palexdev.materialfx.controls.MFXComboBox;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.image.ImageView;
 
+
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.*;
@@ -32,6 +41,12 @@ public class SiteAccuracy implements Initializable {
 
     @FXML
     private ImageView loadGif;
+
+    @FXML
+    private CategoryAxis daysSinceText;
+
+    @FXML
+    private NumberAxis mistakeText;
 
     @FXML
     private void createChart() {
@@ -145,8 +160,41 @@ public class SiteAccuracy implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         comboBox.getItems().add("Все");
+        localize();
         comboBox.getItems().add("Yandex");
         comboBox.getItems().add("Rambler");
         comboBox.getItems().add("WorldWeather");
+    }
+
+    public void localize()
+    {
+        ObjectMapper mapper = new ObjectMapper();
+        List<com.maitrog.models.Locale> locale = null;
+        try {
+            locale = mapper.readValue(new File("src/main/resources/locale.json"), new TypeReference<List<Locale>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        switch(Main.user.getLanguage())
+        {
+            case "ru":
+                lineChart.setTitle(locale.get(23).getRu());
+                comboBox.setPromptText(locale.get(17).getRu());
+                daysSinceText.setLabel(locale.get(24).getRu());
+                mistakeText.setLabel(locale.get(21).getRu());
+                comboBox.setPromptText(locale.get(17).getRu());
+                loadButton.setText(locale.get(22).getRu());
+                break;
+            case "en":
+                lineChart.setTitle(locale.get(23).getEn());
+                comboBox.setPromptText(locale.get(17).getEn());
+                daysSinceText.setLabel(locale.get(24).getEn());
+                mistakeText.setLabel(locale.get(21).getEn());
+                comboBox.setPromptText(locale.get(17).getEn());
+                loadButton.setText(locale.get(22).getEn());
+                break;
+            default:
+                break;
+        }
     }
 }

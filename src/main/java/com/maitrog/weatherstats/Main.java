@@ -1,5 +1,7 @@
 package com.maitrog.weatherstats;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.maitrog.models.ConfigDb;
 import com.maitrog.models.Role;
 import com.maitrog.models.User;
 import javafx.application.Application;
@@ -11,6 +13,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.logging.FileHandler;
@@ -33,7 +36,14 @@ public class Main extends Application{
 
     @Override
     public void start(Stage stage) throws Exception{
-
+        ObjectMapper mapper = new ObjectMapper();
+        ConfigDb configDb = null;
+        try {
+            configDb = mapper.readValue(new File("src/main/resources/config.json"), ConfigDb.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Main.user = new User("admin", "admin", configDb.language, Role.ADMIN);
         fileHandler.setFormatter(new SimpleFormatter());
         logger.addHandler(fileHandler);
         for (Object propertyKeyName:System.getProperties().keySet()){

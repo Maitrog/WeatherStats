@@ -5,6 +5,7 @@ public class ConfigDb {
     public String database;
     public String user;
     public String password;
+    public String language;
     public boolean integratedSecurity;
     public boolean encrypt;
     public boolean trustServerCertificate;
@@ -15,9 +16,10 @@ public class ConfigDb {
         return String.format("jdbc:sqlserver://%s;"
                 + "database=%s;"
                 + "user=%s;"
+                + "language=%s;"
                 + "integratedSecurity=%b;"
                 + "encrypt=%b;"
                 + "trustServerCertificate=%b;"
-                + "loginTimeout=%d;", server, database, user, integratedSecurity, encrypt, trustServerCertificate, loginTimeout);
+                + "loginTimeout=%d;", server, database, user, language, integratedSecurity, encrypt, trustServerCertificate, loginTimeout);
     }
 }

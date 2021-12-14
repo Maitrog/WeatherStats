@@ -1,16 +1,24 @@
 package com.maitrog.controllers;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.maitrog.models.DbWeather;
+import com.maitrog.models.Locale;
 import com.maitrog.models.SiteType;
 import com.maitrog.models.Weather;
+import com.maitrog.weatherstats.Main;
+import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
@@ -26,14 +34,22 @@ public class GraphicsController implements Initializable {
     private LineChart<String, Number> lineChart;
 
     @FXML
+    private CategoryAxis checkDateText;
+
+    @FXML
+    private NumberAxis temperatureText;
+
+    @FXML
     private MFXComboBox<String> comboBox;
 
     @FXML
     private MFXTextField textField;
 
-
     @FXML
     private MFXDatePicker datePicker;
+
+    @FXML
+    private MFXButton plotChartButton;
 
     @FXML
     private void plotMedian() {
@@ -183,7 +199,7 @@ public class GraphicsController implements Initializable {
                     series.setName("WorldWeather");
                     fixRequest(targetDateWeather);
                 }
-                case "All" -> {
+                case "All", "Все" -> {
                     List<Weather> ramblerDateWeather;
                     List<Weather> yandexDateWeather;
                     List<Weather> worldDateWeather;
@@ -234,10 +250,50 @@ public class GraphicsController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        comboBox.getItems().add("All");
-        comboBox.getItems().add("Yandex");
-        comboBox.getItems().add("Rambler");
-        comboBox.getItems().add("WorldWeather");
+        localize();
+        if(Main.user.getLanguage().equals("en"))
+        {
+            comboBox.getItems().add("All");
+            comboBox.getItems().add("Yandex");
+            comboBox.getItems().add("Rambler");
+            comboBox.getItems().add("WorldWeather");
+        }
+        else if (Main.user.getLanguage().equals("ru"))
+        {
+            comboBox.getItems().add("Все");
+            comboBox.getItems().add("Yandex");
+            comboBox.getItems().add("Rambler");
+            comboBox.getItems().add("WorldWeather");
+        }
+    }
 
+    public void localize()
+    {
+        ObjectMapper mapper = new ObjectMapper();
+        List<Locale> locale = null;
+        try {
+            locale = mapper.readValue(new File("src/main/resources/locale.json"), new TypeReference<List<Locale>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        switch(Main.user.getLanguage())
+        {
+            case "ru":
+                lineChart.setTitle(locale.get(5).getRu());
+                checkDateText.setLabel(locale.get(19).getRu());
+                temperatureText.setLabel(locale.get(18).getRu());
+                comboBox.setPromptText(locale.get(17).getRu());
+                plotChartButton.setText(locale.get(12).getRu());
+                break;
+            case "en":
+                lineChart.setTitle(locale.get(5).getEn());
+                checkDateText.setLabel(locale.get(19).getEn());
+                temperatureText.setLabel(locale.get(18).getEn());
+                comboBox.setPromptText(locale.get(17).getEn());
+                plotChartButton.setText(locale.get(12).getEn());
+                break;
+            default:
+                break;
+        }
     }
 }
