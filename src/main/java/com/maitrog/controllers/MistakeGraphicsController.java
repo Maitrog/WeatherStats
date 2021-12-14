@@ -54,6 +54,9 @@ public class MistakeGraphicsController implements Initializable {
     private MFXButton plotMistakeChartButton;
 
     @FXML
+    private MFXButton plotDistributionLawButton;
+
+    @FXML
     private void plotMistakeChart() {
         mistakeLineChart.getData().clear();
         xAxis.setLabel("Дата проверки");
@@ -270,6 +273,7 @@ public class MistakeGraphicsController implements Initializable {
                 yAxis.setLabel(locale.get(21).getRu());
                 mistakeComboBox.setPromptText(locale.get(17).getRu());
                 plotMistakeChartButton.setText(locale.get(22).getRu());
+                plotDistributionLawButton.setText(locale.get(30).getRu());
                 break;
             case "en":
                 mistakeLineChart.setTitle(locale.get(20).getEn());
@@ -277,6 +281,7 @@ public class MistakeGraphicsController implements Initializable {
                 yAxis.setLabel(locale.get(21).getEn());
                 mistakeComboBox.setPromptText(locale.get(17).getEn());
                 plotMistakeChartButton.setText(locale.get(22).getEn());
+                plotDistributionLawButton.setText(locale.get(30).getEn());
                 break;
             default:
                 break;

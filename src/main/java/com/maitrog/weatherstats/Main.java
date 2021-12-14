@@ -23,7 +23,7 @@ import java.util.logging.SimpleFormatter;
 
 public class Main extends Application{
     public static final Logger logger = Logger.getGlobal();
-    public static User user = null;
+    public static User user = new User();
     private final FileHandler fileHandler = new FileHandler("InfoLog.log");
 
     public Main() throws IOException {
@@ -43,7 +43,9 @@ public class Main extends Application{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Main.user = new User("admin", "admin", configDb.language, Role.ADMIN);
+        assert configDb != null;
+        user.setLanguage(configDb.language);
+//        Main.user = new User("admin", "admin", configDb.language, Role.ADMIN);
         fileHandler.setFormatter(new SimpleFormatter());
         logger.addHandler(fileHandler);
         for (Object propertyKeyName:System.getProperties().keySet()){

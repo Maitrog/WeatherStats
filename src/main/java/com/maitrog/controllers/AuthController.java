@@ -2,10 +2,7 @@ package com.maitrog.controllers;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.maitrog.models.DbWeather;
-import com.maitrog.models.Locale;
-import com.maitrog.models.Role;
-import com.maitrog.models.User;
+import com.maitrog.models.*;
 import com.maitrog.weatherstats.Main;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXPasswordField;
@@ -131,6 +128,15 @@ public class AuthController implements Initializable {
                         User dbUser = db.getUser(tempLogin);
                         if (dbUser.getPasswordHash().equals(DigestUtils.sha256Hex(tempPassword))) {
                             Main.user = dbUser;
+                            ObjectMapper mapper = new ObjectMapper();
+                            ConfigDb configDb = null;
+                            try {
+                                configDb = mapper.readValue(new File("src/main/resources/config.json"), ConfigDb.class);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            assert configDb != null;
+                            Main.user.setLanguage(configDb.language);
                             authorized = true;
                         } else {
                             authorized = false;
@@ -151,8 +157,6 @@ public class AuthController implements Initializable {
                     }
                 });
             });
-            Stage stage = (Stage) authorize.getScene().getWindow();
-            stage.hide();
             authThread.setDaemon(true);
             authThread.start();
         });
