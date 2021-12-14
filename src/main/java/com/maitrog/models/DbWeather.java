@@ -2,6 +2,7 @@ package com.maitrog.models;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.maitrog.weatherstats.Main;
+import javafx.util.Pair;
 
 import java.io.File;
 import java.io.IOException;
@@ -64,6 +65,23 @@ public class DbWeather {
                             "WHERE (Cities.NameRu = '%s' OR Cities.NameEn = '%s') AND SiteType = %d AND TargetDate = '%s'" +
                             "ORDER BY(CheckedDate)",
                     name, name, SiteType.getValue(siteType), sdf.format(targetDate)));
+            return parseWeatherResponse(weatherResult);
+        } catch (SQLException throwables) {
+            Main.logger.log(Level.SEVERE, throwables.getMessage());
+            throwables.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+    public List<Weather> getDistributionData(String name, Date targetDate, Date lowestDate, int dateDiff) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        try (Statement statement = connection.createStatement()) {
+            ResultSet weatherResult = statement.executeQuery(String.format("SELECT Weather.Id, CheckedDate, TargetDate, MinTemperature, MaxTemperature, Pressure, Humidity, SiteType, CityId " +
+                            "FROM Weather " +
+                            "JOIN Cities ON Cities.Id = Weather.CityId " +
+                            "WHERE (Cities.NameRu = '%s' OR Cities.NameEn = '%s') AND (TargetDate BETWEEN '%s' AND '%s') AND DATEDIFF(day, CheckedDate, TargetDate) = %d" +
+                            "ORDER BY(CheckedDate)",
+                    name, name, sdf.format(lowestDate), sdf.format(targetDate), dateDiff));
             return parseWeatherResponse(weatherResult);
         } catch (SQLException throwables) {
             Main.logger.log(Level.SEVERE, throwables.getMessage());
@@ -145,6 +163,37 @@ public class DbWeather {
                 avgTemp.add(avgTempResult.getDouble("avgTemp"));
             }
             allAvgTemperature.add(avgTemp);
+            return allAvgTemperature;
+        } catch (SQLException throwables) {
+            Main.logger.log(Level.SEVERE, throwables.getMessage());
+            return Collections.emptyList();
+        }
+    }
+
+    public List<Pair<Date, Double>> getAvgTemperature(String cityName, Date lowestDate, Date targetDate) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        try (Statement statement = connection.createStatement()) {
+            ResultSet avgTempResult = statement.executeQuery(String.format("""
+                    WITH allTemp as ((SELECT MinTemperature as Temperature, TargetDate
+                    FROM Weather
+                    LEFT JOIN Cities ON Cities.Id = Weather.CityId
+                    WHERE TargetDate = CheckedDate AND (Cities.NameRu = '%s' OR Cities.NameEn = '%s') AND (TargetDate BETWEEN '%s' AND '%s'))
+                    UNION ALL
+                    (SELECT MaxTemperature as Temperature, TargetDate
+                    FROM Weather
+                    LEFT JOIN Cities ON Cities.Id = Weather.CityId
+                    Where TargetDate = CheckedDate AND (Cities.NameRu = '%s' OR Cities.NameEn = '%s') AND (TargetDate BETWEEN '%s' AND '%s')))
+                    SELECT TargetDate, AVG(Cast(Temperature as Float)) as avgTemp
+                    FROM allTemp
+                    GROUP BY TargetDate
+                    ORDER BY TargetDate""", cityName, cityName, sdf.format(lowestDate), sdf.format(targetDate), cityName, cityName, sdf.format(lowestDate), sdf.format(targetDate)));
+            List<Pair<Date, Double>> allAvgTemperature = new ArrayList<>();
+            int cityId = 0;
+            while (avgTempResult.next()) {
+                Date newDate = avgTempResult.getDate("TargetDate");
+                Double avg = avgTempResult.getDouble("avgTemp");
+                allAvgTemperature.add(new Pair<>(newDate, avg));
+            }
             return allAvgTemperature;
         } catch (SQLException throwables) {
             Main.logger.log(Level.SEVERE, throwables.getMessage());
