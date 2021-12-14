@@ -1,9 +1,13 @@
 package com.maitrog.controllers;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.maitrog.models.DbWeather;
+import com.maitrog.models.Locale;
 import com.maitrog.models.SiteType;
 import com.maitrog.models.Weather;
 import com.maitrog.weatherstats.Main;
+import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXTextField;
@@ -16,6 +20,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.util.Pair;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -44,6 +49,9 @@ public class MistakeGraphicsController implements Initializable {
 
     @FXML
     private MFXDatePicker mistakeDatePicker;
+
+    @FXML
+    private MFXButton plotMistakeChartButton;
 
     @FXML
     private void plotMistakeChart() {
@@ -230,9 +238,48 @@ public class MistakeGraphicsController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        mistakeComboBox.getItems().add("Все");
-        mistakeComboBox.getItems().add("Yandex");
-        mistakeComboBox.getItems().add("Rambler");
-        mistakeComboBox.getItems().add("WorldWeather");
+        localize();
+        if(Main.user.getLanguage().equals("en")) {
+            mistakeComboBox.getItems().add("All");
+            mistakeComboBox.getItems().add("Yandex");
+            mistakeComboBox.getItems().add("Rambler");
+            mistakeComboBox.getItems().add("WorldWeather");
+        } else
+        {
+            mistakeComboBox.getItems().add("Все");
+            mistakeComboBox.getItems().add("Yandex");
+            mistakeComboBox.getItems().add("Rambler");
+            mistakeComboBox.getItems().add("WorldWeather");
+        }
+    }
+
+    public void localize()
+    {
+        ObjectMapper mapper = new ObjectMapper();
+        List<Locale> locale = null;
+        try {
+            locale = mapper.readValue(new File("src/main/resources/locale.json"), new TypeReference<List<Locale>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        switch(Main.user.getLanguage())
+        {
+            case "ru":
+                mistakeLineChart.setTitle(locale.get(20).getRu());
+                xAxis.setLabel(locale.get(19).getRu());
+                yAxis.setLabel(locale.get(21).getRu());
+                mistakeComboBox.setPromptText(locale.get(17).getRu());
+                plotMistakeChartButton.setText(locale.get(22).getRu());
+                break;
+            case "en":
+                mistakeLineChart.setTitle(locale.get(20).getEn());
+                xAxis.setLabel(locale.get(19).getEn());
+                yAxis.setLabel(locale.get(21).getEn());
+                mistakeComboBox.setPromptText(locale.get(17).getEn());
+                plotMistakeChartButton.setText(locale.get(22).getEn());
+                break;
+            default:
+                break;
+        }
     }
 }

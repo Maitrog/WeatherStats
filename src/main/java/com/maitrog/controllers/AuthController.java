@@ -1,6 +1,9 @@
 package com.maitrog.controllers;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.maitrog.models.DbWeather;
+import com.maitrog.models.Locale;
 import com.maitrog.models.Role;
 import com.maitrog.models.User;
 import com.maitrog.weatherstats.Main;
@@ -16,13 +19,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.commons.codec.digest.DigestUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 
@@ -53,9 +59,18 @@ public class AuthController implements Initializable {
     @FXML
     private MFXButton backToLogin;
 
+    @FXML
+    private Label loginText;
+
+    @FXML
+    private Label passwordText;
+
+    @FXML
+    private Label confirmText;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        localize();
         AbstractMFXValidator loginValidator = new AbstractMFXValidator() {
             @Override
             public void setValidatorMessage(String validatorMessage) {
@@ -65,10 +80,6 @@ public class AuthController implements Initializable {
             @Override
             public boolean isValid() {
                 if (login.getText().equals("") || login.getText().length() < 4) {
-                    /*
-                     *   TODO:
-                     *    здесь прописывается проверка с бд логина
-                     */
                     return !super.isValid();
                 } else {
                     return super.isValid();
@@ -140,6 +151,8 @@ public class AuthController implements Initializable {
                     }
                 });
             });
+            Stage stage = (Stage) authorize.getScene().getWindow();
+            stage.hide();
             authThread.setDaemon(true);
             authThread.start();
         });
@@ -216,5 +229,39 @@ public class AuthController implements Initializable {
             regThread.setDaemon(true);
             regThread.start();
         });
+    }
+
+    public void localize()
+    {
+        ObjectMapper mapper = new ObjectMapper();
+        List<Locale> locale = null;
+        try {
+            locale = mapper.readValue(new File("src/main/resources/locale.json"), new TypeReference<List<Locale>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        switch(Main.user.getLanguage())
+        {
+            case "ru":
+                loginText.setText(locale.get(0).getRu());
+                passwordText.setText(locale.get(1).getRu());
+                authorize.setText(locale.get(2).getRu());
+                register.setText(locale.get(3).getRu());
+                registerFinal.setText(locale.get(3).getRu());
+                backToLogin.setText(locale.get(29).getRu());
+                confirmText.setText(locale.get(28).getRu());
+                break;
+            case "en":
+                loginText.setText(locale.get(0).getEn());
+                passwordText.setText(locale.get(1).getEn());
+                authorize.setText(locale.get(2).getEn());
+                register.setText(locale.get(3).getEn());
+                registerFinal.setText(locale.get(3).getEn());
+                backToLogin.setText(locale.get(29).getEn());
+                confirmText.setText(locale.get(28).getEn());
+                break;
+            default:
+                break;
+        }
     }
 }

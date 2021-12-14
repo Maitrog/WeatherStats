@@ -1,0 +1,122 @@
+[
+  {
+    "ru": "Логин",
+    "en": "Login"
+  },
+  {
+    "ru": "Пароль",
+    "en": "Password"
+  },
+  {
+    "ru": "Войти",
+    "en": "Sign In"
+  },
+  {
+    "ru": "Регистрация",
+    "en": "Sign Up"
+  },
+  {
+    "ru": "ПрогнозСтатс",
+    "en": "WeatherStats"
+  },
+  {
+    "ru": "Прогноз погоды",
+    "en": "Weather Forecast"
+  },
+  {
+    "ru": "Отклонение от средней температуты",
+    "en": "Deviation of average temperature"
+  },
+  {
+    "ru": "Среднее отклонение прогноза погоды",
+    "en": "Average temperature mistake"
+  },
+  {
+    "ru": "Обновление данных",
+    "en": "Update database"
+  },
+  {
+    "ru": "Настройки",
+    "en": "Settings"
+  },
+  {
+    "ru": "Последнее обновление: ",
+    "en": "Last update: "
+  },
+  {
+    "ru": "Обновить",
+    "en": "Update"
+  },
+  {
+    "ru": "Построить",
+    "en": "Show"
+  },
+  {
+    "ru": "IP базы данных",
+    "en": "Database IP"
+  },
+  {
+    "ru": "Название базы данных",
+    "en": "Database Name"
+  },
+  {
+    "ru": "Имя",
+    "en": "Name"
+  },
+  {
+    "ru": "Сохранить",
+    "en": "Save"
+  },
+  {
+    "ru": "Выберите",
+    "en": "Select"
+  },
+  {
+    "ru": "Температура",
+    "en": "Temperature"
+  },
+  {
+    "ru": "Дата снятия показаний",
+    "en": "Check Date"
+  },
+  {
+    "ru": "График отклонений температуры",
+    "en": "Temperature Mistake Chart"
+  },
+  {
+    "ru": "Отклонение",
+    "en": "Temperature Mistake"
+  },
+  {
+    "ru": "Показать график",
+    "en": "Load Mistake Chart"
+  },
+  {
+    "ru": "Среднее отклонение от реального значения",
+    "en": "Average temperature mistake of past data"
+  },
+  {
+    "ru": "Дней до даты",
+    "en": "Days Since Check"
+  },
+  {
+    "ru": "Русский",
+    "en": "Russian"
+  },
+  {
+    "ru": "Английский",
+    "en": "English"
+  },
+  {
+    "ru": "Язык",
+    "en": "Language"
+  },
+  {
+    "ru": "Подтвердите пароль",
+    "en": "Confirm password"
+  },
+  {
+    "ru": "Вернуться",
+    "en": "Back to Sign In"
+  }
+]

@@ -8,7 +8,7 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maitrog.controllers.UpdateDatabaseController">
    <children>
-      <Text layoutX="14.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Последнее обновление:" wrappingWidth="227.201171875" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
+      <Text fx:id="lastCheckText" layoutX="14.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Последнее обновление:" wrappingWidth="227.201171875" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
          <font>
             <Font size="20.0" />
          </font>

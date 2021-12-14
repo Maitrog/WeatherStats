@@ -1,12 +1,16 @@
 package com.maitrog.controllers;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.maitrog.models.*;
 import com.maitrog.weatherstats.Main;
+import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.text.Text;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -22,11 +26,17 @@ public class UpdateDatabaseController implements Initializable {
     @FXML
     private Text lastCheckDate;
 
+    @FXML
+    private Text lastCheckText;
+
+    @FXML
+    private MFXButton updateButton;
+
     private static int lastCheckedCityId = 0;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        localize();
     }
 
     public void updateDatabase(ActionEvent event) {
@@ -64,5 +74,29 @@ public class UpdateDatabaseController implements Initializable {
         }
         update.setDaemon(true);
         update.start();
+    }
+
+    public void localize()
+    {
+        ObjectMapper mapper = new ObjectMapper();
+        List<Locale> locale = null;
+        try {
+            locale = mapper.readValue(new File("src/main/resources/locale.json"), new TypeReference<List<Locale>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        switch(Main.user.getLanguage())
+        {
+            case "ru":
+                lastCheckText.setText(locale.get(10).getRu());
+                updateButton.setText(locale.get(11).getRu());
+                break;
+            case "en":
+                lastCheckText.setText(locale.get(10).getEn());
+                updateButton.setText(locale.get(11).getEn());
+                break;
+            default:
+                break;
+        }
     }
 }

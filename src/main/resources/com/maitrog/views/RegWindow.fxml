@@ -6,6 +6,9 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <AnchorPane prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maitrog.controllers.AuthController">
    <children>
       <MFXTextField fx:id="login" layoutX="70.0" layoutY="60.0" prefHeight="26.0" prefWidth="160.0" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="70.0" />
@@ -15,8 +18,8 @@
       <MFXButton fx:id="authorize" layoutX="-89.0" layoutY="206.0" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Войти" />
       <MFXButton fx:id="register" layoutX="-168.0" layoutY="239.0" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Регистрация" />
       <MFXButton fx:id="backToLogin" layoutX="124.0" layoutY="323.0" rippleColor="#78909c" style="-fx-background-color: #b0bec5;" text="Войти" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="70.0" />
-      <Label layoutX="69.0" layoutY="86.0" prefHeight="18.0" prefWidth="121.0" text="Логин" />
-      <Label layoutX="70.0" layoutY="158.0" prefHeight="18.0" prefWidth="127.0" text="Пароль" />
-      <Label layoutX="73.0" layoutY="221.0" prefHeight="18.0" prefWidth="160.0" text="Подтвердите пароль" />
+      <Label fx:id="loginText" layoutX="69.0" layoutY="86.0" prefHeight="18.0" prefWidth="121.0" text="Логин" />
+      <Label fx:id="passwordText" layoutX="70.0" layoutY="158.0" prefHeight="18.0" prefWidth="127.0" text="Пароль" />
+      <Label fx:id="confirmText" layoutX="73.0" layoutY="221.0" prefHeight="18.0" prefWidth="160.0" text="Подтвердите пароль" />
    </children>
 </AnchorPane>
