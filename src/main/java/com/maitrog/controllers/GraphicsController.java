@@ -267,6 +267,7 @@ public class GraphicsController implements Initializable {
         }
     }
 
+
     public void localize()
     {
         ObjectMapper mapper = new ObjectMapper();
