@@ -14,11 +14,11 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.util.Pair;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.sql.Array;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -89,19 +89,27 @@ public class MistakeGraphicsController implements Initializable {
                 double worldTemp = (worldWeather.getMaxTemperature() - worldWeather.getMinTemperature()) / 2.0
                         + worldWeather.getMinTemperature();
                 double tmp = (ramblerTemp + yandexTemp + worldTemp) / 3;
-                int currentWeather = (int)Math.round(tmp);
-
+                Platform.runLater(() -> {
+                    try {
+                int currentWeather;
                 Date lowestDate = Date.valueOf(mistakeDatePicker.getDate().minusDays(minusDays));
-                List<Weather> distributionWeather = DbWeather.getInstance().getDistributionData(mistakeTextField.getText(),
+                    List<Pair<Date, Double>> currentWeathers = null;
+                        currentWeathers = DbWeather.getInstance().getAvgTemperature(mistakeTextField.getText(),
+                                lowestDate, Date.valueOf(mistakeDatePicker.getDate()));
+
+                    List<Weather> distributionWeather = DbWeather.getInstance().getDistributionData(mistakeTextField.getText(),
                         Date.valueOf(mistakeDatePicker.getDate()), lowestDate, dateDiff);
                 List<Integer> tempsMistake = new ArrayList<>();
 
                 HashMap<Integer, Integer> countMistake = new HashMap<>();
 
-                Platform.runLater(() -> {
                     for (Weather weather : distributionWeather) {
-                        double temp = (weather.getMaxTemperature() - weather.getMinTemperature()) / 2.0;
+                        Optional<Pair<Date, Double>> currentPair = currentWeathers.stream().filter(x-> x.getKey().equals(weather.getTargetDate())).findFirst();
+                        if(currentPair.isEmpty()) continue;
+                        currentWeather = (int)Math.round(currentPair.get().getValue());
+                        double temp = (weather.getMaxTemperature() - weather.getMinTemperature()) / 2.0 + weather.getMinTemperature();
                         tempsMistake.add(currentWeather - (int)Math.round(temp));
+                        Main.logger.log(Level.INFO, currentWeather + " - " + temp);
                     }
 
                     for (int mistake : tempsMistake) {
@@ -125,6 +133,9 @@ public class MistakeGraphicsController implements Initializable {
 
                     mistakeLineChart.getData().add(distributionSeries);
                     distributionSeries.setName("Distribution Law");
+                    } catch (SQLException | ClassNotFoundException | IOException e) {
+                        e.printStackTrace();
+                    }
                 });
             } catch (SQLException | ClassNotFoundException |
                     IOException e) {
