@@ -57,6 +57,9 @@ public class MistakeGraphicsController implements Initializable {
     private MFXButton plotDistributionLawButton;
 
     @FXML
+    private MFXTextField dateDiffField;
+
+    @FXML
     private void plotMistakeChart() {
         mistakeLineChart.getData().clear();
         xAxis.setLabel("Дата проверки");
@@ -73,7 +76,7 @@ public class MistakeGraphicsController implements Initializable {
         mistakeLineChart.getData().clear();
         xAxis.setLabel("Отклонение температуры");
         yAxis.setLabel("Количество таких отклонений");
-        makeDistributionLaw(30, 3);//считывание с источника
+        makeDistributionLaw(30, Integer.parseInt(dateDiffField.getText()));//считывание с источника
     }
 
     private void makeDistributionLaw(int minusDays, int dateDiff) {
@@ -120,7 +123,6 @@ public class MistakeGraphicsController implements Initializable {
                         currentWeather = (int)Math.round(currentPair.get().getValue());
                         double temp = (weather.getMaxTemperature() - weather.getMinTemperature()) / 2.0 + weather.getMinTemperature();
                         tempsMistake.add(currentWeather - (int)Math.round(temp));
-                        Main.logger.log(Level.INFO, currentWeather + " - " + temp);
                     }
 
                     for (int mistake : tempsMistake) {
