@@ -93,6 +93,7 @@ public class SiteAccuracy implements Initializable {
             List<Future<Void>> futures = new ArrayList<>();
             ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
             try {
+                Semaphore sem = new Semaphore(1);
                 List<List<Double>> allAvgTemp = DbWeather.getInstance().getAllAvgTemperature();
                 List<List<List<Weather>>> allSortedWeather = DbWeather.getInstance().getAllSortedWeather(siteType);
                 for (int j = 0, citiesSize = allAvgTemp.size(); j < citiesSize; j++) {
@@ -113,8 +114,11 @@ public class SiteAccuracy implements Initializable {
                                 countAvgTemp[(int) day]++;
                             }
                         });
+
+                        sem.acquire();
                         allSumAvgTemperatures.add(sumAvgTemp);
                         allCountAvgTemperatures.add(countAvgTemp);
+                        sem.release();
 
                         return null;
                     }));
@@ -166,17 +170,16 @@ public class SiteAccuracy implements Initializable {
         comboBox.getItems().add("WorldWeather");
     }
 
-    public void localize()
-    {
+    public void localize() {
         ObjectMapper mapper = new ObjectMapper();
         List<com.maitrog.models.Locale> locale = null;
         try {
-            locale = mapper.readValue(new File("src/main/resources/locale.json"), new TypeReference<List<Locale>>(){});
+            locale = mapper.readValue(new File("src/main/resources/locale.json"), new TypeReference<List<Locale>>() {
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
-        switch(Main.user.getLanguage())
-        {
+        switch (Main.user.getLanguage()) {
             case "ru":
                 lineChart.setTitle(locale.get(23).getRu());
                 comboBox.setPromptText(locale.get(17).getRu());
