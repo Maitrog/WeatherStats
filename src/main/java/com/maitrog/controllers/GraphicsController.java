@@ -17,16 +17,14 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import org.jfree.data.general.Series;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class GraphicsController implements Initializable {
 
@@ -64,7 +62,7 @@ public class GraphicsController implements Initializable {
     }
 
     private void fixRequest(List<Weather> weather) {
-        while (weather.size() >= 15) weather.remove(0);
+        while (weather.size() >= 20) weather.remove(0);
     }
 
     private void addMedian() {
@@ -76,19 +74,19 @@ public class GraphicsController implements Initializable {
                     weathers = DbWeather.getInstance().getWeathers(textField.getText(), SiteType.Rambler,
                             Date.valueOf(datePicker.getDate()));
                     series.setName("Rambler - Медиана");
-                    fixRequest(weathers);
+                    //fixRequest(weathers);
                 }
                 case "Yandex" -> {
                     weathers = DbWeather.getInstance().getWeathers(textField.getText(), SiteType.Yandex,
                             Date.valueOf(datePicker.getDate()));
                     series.setName("Yandex - Медиана");
-                    fixRequest(weathers);
+                    //fixRequest(weathers);
                 }
                 case "WorldWeather" -> {
                     weathers = DbWeather.getInstance().getWeathers(textField.getText(),
                             SiteType.WorldWeather, Date.valueOf(datePicker.getDate()));
                     series.setName("WorldWeather - Медиана");
-                    fixRequest(weathers);
+                    //fixRequest(weathers);
                 }
                 case "All" -> {
                     List<Weather> ramblerDateWeather;
@@ -106,9 +104,9 @@ public class GraphicsController implements Initializable {
                     List<Double> parsedRambler = new ArrayList<>();
                     List<Double> parsedYandex = new ArrayList<>();
                     List<Double> parsedWorld = new ArrayList<>();
-                    fixRequest(ramblerDateWeather);
-                    fixRequest(yandexDateWeather);
-                    fixRequest(worldDateWeather);
+                    //fixRequest(ramblerDateWeather);
+                    //fixRequest(yandexDateWeather);
+                    //fixRequest(worldDateWeather);
                     double median;
                     for (Weather weather : ramblerDateWeather) {
                         double temperature = (weather.getMaxTemperature() - weather.getMinTemperature());
@@ -185,19 +183,19 @@ public class GraphicsController implements Initializable {
                     targetDateWeather = DbWeather.getInstance().getWeathers(textField.getText(), SiteType.Rambler,
                             Date.valueOf(datePicker.getDate()));
                     series.setName("Rambler");
-                    fixRequest(targetDateWeather);
+                    //fixRequest(targetDateWeather);
                 }
                 case "Yandex" -> {
                     targetDateWeather = DbWeather.getInstance().getWeathers(textField.getText(), SiteType.Yandex,
                             Date.valueOf(datePicker.getDate()));
                     series.setName("Yandex");
-                    fixRequest(targetDateWeather);
+                    //fixRequest(targetDateWeather);
                 }
                 case "WorldWeather" -> {
                     targetDateWeather = DbWeather.getInstance().getWeathers(textField.getText(),
                             SiteType.WorldWeather, Date.valueOf(datePicker.getDate()));
                     series.setName("WorldWeather");
-                    fixRequest(targetDateWeather);
+                    //fixRequest(targetDateWeather);
                 }
                 case "All", "Все" -> {
                     List<Weather> ramblerDateWeather;
@@ -206,15 +204,16 @@ public class GraphicsController implements Initializable {
                     XYChart.Series<String, Number> ramblerSeries = new XYChart.Series<>();
                     XYChart.Series<String, Number> yandexSeries = new XYChart.Series<>();
                     XYChart.Series<String, Number> worldSeries = new XYChart.Series<>();
+                    XYChart.Series<String, Number> allSeries = new XYChart.Series<>();
                     ramblerDateWeather = DbWeather.getInstance().getWeathers(textField.getText(), SiteType.Rambler,
                             Date.valueOf(datePicker.getDate()));
                     yandexDateWeather = DbWeather.getInstance().getWeathers(textField.getText(), SiteType.Yandex,
                             Date.valueOf(datePicker.getDate()));
                     worldDateWeather = DbWeather.getInstance().getWeathers(textField.getText(), SiteType.WorldWeather,
                             Date.valueOf(datePicker.getDate()));
-                    fixRequest(ramblerDateWeather);
-                    fixRequest(yandexDateWeather);
-                    fixRequest(worldDateWeather);
+                    //fixRequest(ramblerDateWeather);
+                    //fixRequest(yandexDateWeather);
+                    //fixRequest(worldDateWeather);
                     for (Weather weather : ramblerDateWeather) {
                         ramblerSeries.getData().add(new XYChart.Data<>(weather.getCheckedDate().toString(),
                                 (weather.getMaxTemperature() - weather.getMinTemperature()) / 2 + weather.getMinTemperature()));
@@ -231,6 +230,7 @@ public class GraphicsController implements Initializable {
                         worldSeries.getData().add(new XYChart.Data<>(weather.getCheckedDate().toString(),
                                 (weather.getMaxTemperature() - weather.getMinTemperature()) / 2 + weather.getMinTemperature()));
                     }
+                    //worldSeries.getData().sort(Comparator.comparing(d -> d.getXValue().toString()));
                     lineChart.getData().add(worldSeries);
                     worldSeries.setName("WorldWeather");
                     return;

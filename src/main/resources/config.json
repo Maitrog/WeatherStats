@@ -1,7 +1,7 @@
 {
-  "server": "",
+  "server": "109.201.106.21:49172",
   "database": "WeatherStats",
-  "user": "",
-  "password": "",
-  "language": "en"
+  "user": "admin",
+  "password": "BujhmLfdfqHf,jnfq",
+  "language": "ru"
 }
