@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -36,6 +37,10 @@ public class UpdateDatabaseController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        if(Main.user.getRole() == Role.USER)
+        {
+            updateButton.setDisable(true);
+        }
         localize();
     }
 

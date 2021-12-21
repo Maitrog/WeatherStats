@@ -89,9 +89,9 @@ public class MistakeGraphicsController implements Initializable {
                 List<Weather> yandexDateWeather = getWeathers(SiteType.Yandex);
                 List<Weather> worldDateWeather = getWeathers(SiteType.WorldWeather);
 
-                fixRequest(ramblerDateWeather);
-                fixRequest(yandexDateWeather);
-                fixRequest(worldDateWeather);
+//                fixRequest(ramblerDateWeather);
+//                fixRequest(yandexDateWeather);
+//                fixRequest(worldDateWeather);
 
                 Weather ramblerWeather = ramblerDateWeather.get(ramblerDateWeather.size() - 1);
                 Weather yandexWeather = yandexDateWeather.get(yandexDateWeather.size() - 1);
@@ -170,9 +170,9 @@ public class MistakeGraphicsController implements Initializable {
                 List<Weather> yandexDateWeather = getWeathers(SiteType.Yandex);
                 List<Weather> worldDateWeather = getWeathers(SiteType.WorldWeather);
               
-                fixRequest(ramblerDateWeather);
-                fixRequest(yandexDateWeather);
-                fixRequest(worldDateWeather);
+//                fixRequest(ramblerDateWeather);
+//                fixRequest(yandexDateWeather);
+//                fixRequest(worldDateWeather);
 
                 Weather ramblerWeather = ramblerDateWeather.get(ramblerDateWeather.size() - 1);
                 Weather yandexWeather = yandexDateWeather.get(yandexDateWeather.size() - 1);
