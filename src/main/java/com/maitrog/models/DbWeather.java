@@ -170,6 +170,70 @@ public class DbWeather {
         }
     }
 
+    public List<List<Double>> getAllMaxTemperature() {
+        try (Statement statement = connection.createStatement()) {
+            ResultSet avgTempResult = statement.executeQuery("""
+                    WITH allTemp as (
+                    (SELECT MaxTemperature as Temperature, TargetDate, CityId
+                    FROM Weather
+                    Where TargetDate = CheckedDate))
+                    SELECT distinct CityId, TargetDate, PERCENTILE_CONT(0.5) within group(order by Temperature) OVER(PArtition BY CityId, TargetDate) as avgTemp
+                    FROM allTemp
+                    ORDER BY CityId, TargetDate""");
+            List<List<Double>> allAvgTemperature = new ArrayList<>();
+            List<Double> avgTemp = new ArrayList<>();
+            int cityId = 0;
+            while (avgTempResult.next()) {
+                int newCityId = avgTempResult.getInt("cityId");
+                if (cityId != newCityId) {
+                    if (cityId != 0) {
+                        allAvgTemperature.add(avgTemp);
+                    }
+                    cityId = newCityId;
+                    avgTemp = new ArrayList<>();
+                }
+                avgTemp.add(avgTempResult.getDouble("avgTemp"));
+            }
+            allAvgTemperature.add(avgTemp);
+            return allAvgTemperature;
+        } catch (SQLException throwables) {
+            Main.logger.log(Level.SEVERE, throwables.getMessage());
+            return Collections.emptyList();
+        }
+    }
+
+    public List<List<Double>> getAllMinTemperature() {
+        try (Statement statement = connection.createStatement()) {
+            ResultSet avgTempResult = statement.executeQuery("""
+                    WITH allTemp as (
+                    (SELECT MinTemperature as Temperature, TargetDate, CityId
+                    FROM Weather
+                    Where TargetDate = CheckedDate))
+                    SELECT distinct CityId, TargetDate, PERCENTILE_CONT(0.5) within group(order by Temperature) OVER(PArtition BY CityId, TargetDate) as avgTemp
+                    FROM allTemp
+                    ORDER BY CityId, TargetDate""");
+            List<List<Double>> allAvgTemperature = new ArrayList<>();
+            List<Double> avgTemp = new ArrayList<>();
+            int cityId = 0;
+            while (avgTempResult.next()) {
+                int newCityId = avgTempResult.getInt("cityId");
+                if (cityId != newCityId) {
+                    if (cityId != 0) {
+                        allAvgTemperature.add(avgTemp);
+                    }
+                    cityId = newCityId;
+                    avgTemp = new ArrayList<>();
+                }
+                avgTemp.add(avgTempResult.getDouble("avgTemp"));
+            }
+            allAvgTemperature.add(avgTemp);
+            return allAvgTemperature;
+        } catch (SQLException throwables) {
+            Main.logger.log(Level.SEVERE, throwables.getMessage());
+            return Collections.emptyList();
+        }
+    }
+
     public List<Pair<Date, Double>> getAvgTemperature(String cityName, Date lowestDate, Date targetDate) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
         try (Statement statement = connection.createStatement()) {
@@ -188,7 +252,6 @@ public class DbWeather {
                     GROUP BY TargetDate
                     ORDER BY TargetDate""", cityName, cityName, sdf.format(lowestDate), sdf.format(targetDate), cityName, cityName, sdf.format(lowestDate), sdf.format(targetDate)));
             List<Pair<Date, Double>> allAvgTemperature = new ArrayList<>();
-            int cityId = 0;
             while (avgTempResult.next()) {
                 Date newDate = avgTempResult.getDate("TargetDate");
                 Double avg = avgTempResult.getDouble("avgTemp");

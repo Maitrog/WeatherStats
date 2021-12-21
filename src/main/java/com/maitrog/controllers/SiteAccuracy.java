@@ -34,6 +34,9 @@ public class SiteAccuracy implements Initializable {
     MFXComboBox<String> comboBox;
 
     @FXML
+    MFXComboBox<String> valueComboBox;
+
+    @FXML
     private LineChart<String, Number> lineChart;
 
     @FXML
@@ -51,114 +54,148 @@ public class SiteAccuracy implements Initializable {
     @FXML
     private void createChart() {
         lineChart.getData().clear();
-        switch (comboBox.getSelectedValue()) {
-            case "Rambler" -> {
-                XYChart.Series<String, Number> series = new XYChart.Series<>();
-                addData(SiteType.Rambler, series);
-                series.setName("Rambler");
-            }
-            case "WorldWeather" -> {
-                XYChart.Series<String, Number> series = new XYChart.Series<>();
-                addData(SiteType.WorldWeather, series);
-                series.setName("World Weather");
-            }
-            case "Yandex" -> {
-                XYChart.Series<String, Number> series = new XYChart.Series<>();
-                addData(SiteType.Yandex, series);
-                series.setName("Yandex");
-            }
-            default -> {
-                XYChart.Series<String, Number> seriesYandex = new XYChart.Series<>();
-                addData(SiteType.Yandex, seriesYandex);
-                seriesYandex.setName("Yandex");
-                XYChart.Series<String, Number> seriesWorldWeather = new XYChart.Series<>();
-                addData(SiteType.WorldWeather, seriesWorldWeather);
-                seriesWorldWeather.setName("WorldWeather");
-                XYChart.Series<String, Number> seriesRambler = new XYChart.Series<>();
-                addData(SiteType.Rambler, seriesRambler);
-                seriesRambler.setName("Rambler");
-            }
-        }
-    }
-
-    private void addData(SiteType siteType, XYChart.Series<String, Number> series) {
         loadButton.setDisable(true);
         loadGif.setVisible(true);
-
         Thread plot = new Thread(() -> {
-            long startTime = System.currentTimeMillis();
-
-            List<double[]> allSumAvgTemperatures = new ArrayList<>();
-            List<int[]> allCountAvgTemperatures = new ArrayList<>();
-            List<Future<Void>> futures = new ArrayList<>();
-            ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-            try {
-                Semaphore sem = new Semaphore(1);
-                List<List<Double>> allAvgTemp = DbWeather.getInstance().getAllAvgTemperature();
-                List<List<List<Weather>>> allSortedWeather = DbWeather.getInstance().getAllSortedWeather(siteType);
-                for (int j = 0, citiesSize = allAvgTemp.size(); j < citiesSize; j++) {
-                    int finalJ = j;
-                    futures.add(service.submit(() -> {
-                        List<Double> realAvgTemp = allAvgTemp.get(finalJ);
-                        List<List<Weather>> sortedWeather = allSortedWeather.get(finalJ);
-                        int datesSize = realAvgTemp.size();
-                        double[] sumAvgTemp = new double[31];
-                        int[] countAvgTemp = new int[31];
-                        IntStream.range(0, datesSize).forEach(i -> {
-                            List<Weather> weathers = sortedWeather.get(i);
-                            for (Weather weather : weathers) {
-                                long day = (weather.getTargetDate().getTime() - weather.getCheckedDate().getTime()) / 1000 / 60 / 60 / 24;
-                                double avgTemp = (weather.getMaxTemperature() - weather.getMinTemperature()) / 2.0 + weather.getMinTemperature();
-                                double mistake = Math.abs(realAvgTemp.get(i) - avgTemp);
-                                sumAvgTemp[(int) day] += mistake;
-                                countAvgTemp[(int) day]++;
-                            }
-                        });
-
-                        sem.acquire();
-                        allSumAvgTemperatures.add(sumAvgTemp);
-                        allCountAvgTemperatures.add(countAvgTemp);
-                        sem.release();
-
-                        return null;
-                    }));
+            switch (comboBox.getSelectedValue()) {
+                case "Rambler" -> {
+                    XYChart.Series<String, Number> series = new XYChart.Series<>();
+                    addData(SiteType.Rambler, series);
+                    series.setName("Rambler");
+                    Platform.runLater(() -> {
+                        lineChart.getData().add(series);
+                    });
                 }
-            } catch (Exception e) {
-                Main.logger.log(Level.SEVERE, e.getMessage());
-            } finally {
-                service.shutdown();
-            }
-            for (Future<Void> future : futures) {
-                try {
-                    future.get();
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
+                case "WorldWeather" -> {
+                    XYChart.Series<String, Number> series = new XYChart.Series<>();
+                    addData(SiteType.WorldWeather, series);
+                    series.setName("World Weather");
+                    Platform.runLater(() -> {
+                        lineChart.getData().add(series);
+                    });
+                }
+                case "Yandex" -> {
+                    XYChart.Series<String, Number> series = new XYChart.Series<>();
+                    addData(SiteType.Yandex, series);
+                    series.setName("Yandex");
+                    Platform.runLater(() -> {
+                        lineChart.getData().add(series);
+                    });
+                }
+                default -> {
+                    XYChart.Series<String, Number> seriesYandex = new XYChart.Series<>();
+                    addData(SiteType.Yandex, seriesYandex);
+                    seriesYandex.setName("Yandex");
+                    XYChart.Series<String, Number> seriesWorldWeather = new XYChart.Series<>();
+                    addData(SiteType.WorldWeather, seriesWorldWeather);
+                    seriesWorldWeather.setName("WorldWeather");
+                    XYChart.Series<String, Number> seriesRambler = new XYChart.Series<>();
+                    addData(SiteType.Rambler, seriesRambler);
+                    seriesRambler.setName("Rambler");
+                    Platform.runLater(() -> {
+                        lineChart.getData().add(seriesYandex);
+                        lineChart.getData().add(seriesWorldWeather);
+                        lineChart.getData().add(seriesRambler);
+                    });
                 }
             }
-
-            int[] totalCountAvg = new int[31];
-            double[] totalSumAvgTemp = new double[31];
-            for (int i = 0; i < allSumAvgTemperatures.size(); i++) {
-                for (int j = 0; j < totalSumAvgTemp.length; j++) {
-                    totalSumAvgTemp[j] += allSumAvgTemperatures.get(i)[j];
-                    totalCountAvg[j] += allCountAvgTemperatures.get(i)[j];
-                }
-            }
-
-            double[] totalAvgTemperature = new double[31];
-            IntStream.range(0, totalCountAvg.length).forEach(i -> totalAvgTemperature[i] = totalSumAvgTemp[i] / totalCountAvg[i]);
-
-            IntStream.range(0, 14).forEach(i -> series.getData().add(new XYChart.Data<>(String.valueOf(i), totalAvgTemperature[i])));
             Platform.runLater(() -> {
                 loadGif.setVisible(false);
-                lineChart.getData().add(series);
                 loadButton.setDisable(false);
             });
-            long endTime = System.currentTimeMillis();
-            Main.logger.log(Level.INFO, "Time: " + (endTime - startTime) + " ms");
         });
         plot.setDaemon(true);
         plot.start();
+    }
+
+    private void addData(SiteType siteType, XYChart.Series<String, Number> series) {
+        long startTime = System.currentTimeMillis();
+
+        List<double[]> allSumAvgTemperatures = new ArrayList<>();
+        List<int[]> allCountAvgTemperatures = new ArrayList<>();
+        List<Future<Void>> futures = new ArrayList<>();
+        ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        try {
+            Semaphore sem = new Semaphore(1);
+            List<List<Double>> allAvgTemp;
+            switch (valueComboBox.getSelectedValue()){
+                case "Min" -> {
+                    allAvgTemp = DbWeather.getInstance().getAllMinTemperature();
+                }
+                case "Max" -> {
+                    allAvgTemp = DbWeather.getInstance().getAllMaxTemperature();
+                }
+                default -> {
+                    allAvgTemp = DbWeather.getInstance().getAllAvgTemperature();
+                }
+            }
+            List<List<List<Weather>>> allSortedWeather = DbWeather.getInstance().getAllSortedWeather(siteType);
+            for (int j = 0, citiesSize = allAvgTemp.size(); j < citiesSize; j++) {
+                int finalJ = j;
+                futures.add(service.submit(() -> {
+                    List<Double> realAvgTemp = allAvgTemp.get(finalJ);
+                    List<List<Weather>> sortedWeather = allSortedWeather.get(finalJ);
+                    int datesSize = realAvgTemp.size();
+                    double[] sumAvgTemp = new double[31];
+                    int[] countAvgTemp = new int[31];
+                    IntStream.range(0, datesSize).forEach(i -> {
+                        List<Weather> weathers = sortedWeather.get(i);
+                        for (Weather weather : weathers) {
+                            long day = (weather.getTargetDate().getTime() - weather.getCheckedDate().getTime()) / 1000 / 60 / 60 / 24;
+                            double avgTemp;
+                            switch (valueComboBox.getSelectedValue()){
+                                case "Min" -> {
+                                    avgTemp = weather.getMinTemperature();
+                                }
+                                case "Max" -> {
+                                    avgTemp = weather.getMaxTemperature();
+                                }
+                                default -> {
+                                    avgTemp = (weather.getMaxTemperature() + weather.getMinTemperature()) / 2.0;
+                                }
+                            }
+                            double mistake = Math.abs(realAvgTemp.get(i) - avgTemp);
+                            sumAvgTemp[(int) day] += mistake;
+                            countAvgTemp[(int) day]++;
+                        }
+                    });
+
+                    sem.acquire();
+                    allSumAvgTemperatures.add(sumAvgTemp);
+                    allCountAvgTemperatures.add(countAvgTemp);
+                    sem.release();
+
+                    return null;
+                }));
+            }
+        } catch (Exception e) {
+            Main.logger.log(Level.SEVERE, e.getMessage());
+        } finally {
+            service.shutdown();
+        }
+        for (Future<Void> future : futures) {
+            try {
+                future.get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+
+        int[] totalCountAvg = new int[31];
+        double[] totalSumAvgTemp = new double[31];
+        for (int i = 0; i < allSumAvgTemperatures.size(); i++) {
+            for (int j = 0; j < totalSumAvgTemp.length; j++) {
+                totalSumAvgTemp[j] += allSumAvgTemperatures.get(i)[j];
+                totalCountAvg[j] += allCountAvgTemperatures.get(i)[j];
+            }
+        }
+
+        double[] totalAvgTemperature = new double[31];
+        IntStream.range(0, totalCountAvg.length).forEach(i -> totalAvgTemperature[i] = totalSumAvgTemp[i] / totalCountAvg[i]);
+
+        IntStream.range(0, 14).forEach(i -> series.getData().add(new XYChart.Data<>(String.valueOf(i), totalAvgTemperature[i])));
+        long endTime = System.currentTimeMillis();
+        Main.logger.log(Level.INFO, "Time: " + (endTime - startTime) + " ms");
     }
 
     @Override
@@ -168,6 +205,10 @@ public class SiteAccuracy implements Initializable {
         comboBox.getItems().add("Yandex");
         comboBox.getItems().add("Rambler");
         comboBox.getItems().add("WorldWeather");
+
+        valueComboBox.getItems().add("Min");
+        valueComboBox.getItems().add("Max");
+        valueComboBox.getItems().add("Avg");
     }
 
     public void localize() {
